@@ -3,250 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Discover trusted pet care services, grooming, walking and boarding with PawCare.">
-  <title>PawCare | Better Care for Every Paw</title>
+  <meta name="description" content="PawCare brings pet services, health guidance, nutrition, adoption resources and pet essentials together in one place.">
+  <title>PawCare | Happy Pets, Happier Lives</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
 </head>
+
 <body>
+
+  <!-- HEADER -->
   <header class="site-header">
-    <nav class="navbar container" aria-label="Main navigation">
-      <a class="logo" href="#home"><span>🐾</span> pawcare</a>
+    <div class="container nav-wrapper">
+      <a href="#home" class="logo">
+        <span class="logo-icon">🐾</span>
+        <span>Paw<span class="logo-accent">Care</span></span>
+      </a>
 
-      <button class="menu-toggle" id="menuToggle"
-        aria-label="Toggle navigation" aria-expanded="false">
-        ☰
-      </button>
+      <input type="checkbox" id="menu-toggle" class="menu-toggle">
+      <label for="menu-toggle" class="menu-button" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
 
-      <div class="nav-links" id="navLinks">
+      <nav class="navigation">
         <a href="#home">Home</a>
         <a href="#services">Services</a>
-        <a href="#about">About us</a>
-        <a href="#tips">Pet care tips</a>
-        <a class="nav-cta" href="#booking">Book a service ↗</a>
-      </div>
-    </nav>
+        <a href="#features">Explore PawCare</a>
+        <a href="#about">About Us</a>
+        <a href="#tips">Pet Care Tips</a>
+        <a href="#booking" class="nav-cta">Book a Service</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="hero container" id="home">
-      <div class="hero-content">
-        <span class="eyebrow">♥ MADE WITH LOVE FOR PETS</span>
-        <h1>Because every pet deserves <span>the best care.</span></h1>
-        <p>
-          From playful walks to expert grooming, find the care
-          your furry family deserves — all in one place.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#services">Explore services →</a>
-          <a class="button button-secondary" href="#about">Discover PawCare</a>
-        </div>
-        <div class="trust-note">
-          <span class="trust-icon">✓</span>
-          Thoughtful care for your four-legged family
-        </div>
-      </div>
 
-      <div class="hero-image">
-        <img
-          src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1000&q=85"
-          alt="Happy golden retriever enjoying a sunny day">
-        <div class="floating-card">
-          <span class="floating-icon">♡</span>
-          <div>
-            <strong>Happy pets, happy hearts</strong>
-            <p>Care that feels like family</p>
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="container hero-layout">
+        <div class="hero-content">
+          <span class="eyebrow">A HAPPIER LIFE FOR EVERY PET</span>
+          <h1>Because your pet deserves <span>the very best.</span></h1>
+          <p>
+            Discover pet care services, helpful health resources,
+            nutrition guidance and everyday essentials — all in one place.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#services" class="button button-primary">Explore Services ↗</a>
+            <a href="#about" class="button button-secondary">Discover PawCare</a>
           </div>
+
+          <div class="hero-note">
+            <span class="note-icon">♥</span>
+            <span>More care. More comfort. More happy moments.</span>
+          </div>
+        </div>
+
+        <div class="hero-image-wrap">
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1100&q=85"
+            alt="Happy dog enjoying a sunny day"
+          >
+          <div class="floating-card">
+            <span class="floating-icon">🐶</span>
+            <div>
+              <strong>Every pet matters</strong>
+              <p>Care starts with love.</p>
+            </div>
+          </div>
+          <div class="hero-decoration">✳</div>
         </div>
       </div>
     </section>
 
-    <section class="services section" id="services">
+    <!-- INTRO STRIP -->
+    <section class="trust-strip">
+      <div class="container trust-grid">
+        <div><span>♡</span> Pet-first approach</div>
+        <div><span>✦</span> Helpful care resources</div>
+        <div><span>✓</span> Easy to explore</div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section" id="services">
       <div class="container">
         <div class="section-heading">
-          <span class="eyebrow">WHAT WE OFFER</span>
-          <h2>Everything your pet needs</h2>
-          <p>Simple, convenient care for every stage of your pet's life.</p>
+          <span class="eyebrow">CARE MADE SIMPLE</span>
+          <h2>Services for every <span>paw and personality.</span></h2>
+          <p>Explore everyday services that help make pet parenting easier.</p>
         </div>
 
         <div class="service-grid">
           <article class="service-card">
-            <div class="service-icon">✂️</div>
+            <div class="service-icon icon-green">✂️</div>
             <h3>Pet Grooming</h3>
-            <p>Baths, brushing and grooming to keep your pet fresh and comfortable.</p>
-            <a href="#booking" data-service="Grooming">Book grooming →</a>
+            <p>Explore grooming options to help keep your pet clean, comfortable and cared for.</p>
+            <a href="#booking" data-service="Pet Grooming" class="text-link">Book grooming ↗</a>
           </article>
 
           <article class="service-card">
-            <div class="service-icon">🩺</div>
+            <div class="service-icon icon-peach">🩺</div>
             <h3>Veterinary Care</h3>
-            <p>Find the right care for checkups and your pet's health needs.</p>
-            <a href="#booking" data-service="Veterinary Care">Explore care →</a>
+            <p>Learn about routine checkups, preventive care and keeping health records organized.</p>
+            <a href="#booking" data-service="Veterinary Care" class="text-link">Explore care ↗</a>
           </article>
 
           <article class="service-card">
-            <div class="service-icon">🦮</div>
-            <h3>Dog Walking</h3>
-            <p>Make room for exercise, fresh air and more tail-wagging moments.</p>
-            <a href="#booking" data-service="Dog Walking">Book a walk →</a>
+            <div class="service-icon icon-yellow">🐕</div>
+            <h3>Walking</h3>
+            <p>Make room for movement, fresh air and enjoyable outdoor time.</p>
+            <a href="#booking" data-service="Walking" class="text-link">Book a walk ↗</a>
           </article>
 
           <article class="service-card">
-            <div class="service-icon">🏡</div>
+            <div class="service-icon icon-blue">🏡</div>
             <h3>Pet Boarding</h3>
-            <p>Explore options for a comfortable stay while you're away.</p>
-            <a href="#booking" data-service="Pet Boarding">Find boarding →</a>
+            <p>Explore boarding options for when your pet needs care while you're away.</p>
+            <a href="#booking" data-service="Pet Boarding" class="text-link">Explore boarding ↗</a>
           </article>
         </div>
       </div>
     </section>
 
-   <!-- About PawCare Section -->
-<section class="about-section section" id="about">
-  <div class="container">
-    <div class="about-wrapper">
-
-      <div class="about-image">
-        <img
-          src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=900&q=85"
-          alt="A happy dog enjoying time outdoors"
-        >
-        <div class="about-badge">
-          <span class="badge-icon">🐾</span>
-          <div>
-            <strong>Every Pet Matters</strong>
-            <p>Care, comfort and happiness</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="about-text">
-        <span class="eyebrow">A LITTLE ABOUT US</span>
-
-        <h2>
-          More than a service.
-          <span>A little more love.</span>
-        </h2>
-
-        <p class="about-description">
-          Welcome to PawCare, your one-stop destination for
-          discovering and organizing pet care services.
-          We believe every pet deserves a happy, healthy
-          and comfortable life.
-        </p>
-
-        <p>
-          From grooming and walking to health tracking,
-          nutrition planning, adoption resources and pet
-          essentials, PawCare brings useful pet care
-          resources together in one convenient place.
-        </p>
-
-        <div class="about-benefits">
-          <div class="benefit-item">
-            <span>✓</span>
-            <div>
-              <strong>Easy to Explore</strong>
-              <p>Find pet care resources in one place.</p>
-            </div>
-          </div>
-
-          <div class="benefit-item">
-            <span>✓</span>
-            <div>
-              <strong>Care for Every Pet</strong>
-              <p>Discover information for different pets.</p>
-            </div>
-          </div>
-
-          <div class="benefit-item">
-            <span>✓</span>
-            <div>
-              <strong>Designed for Pet Parents</strong>
-              <p>Make everyday care easier to organize.</p>
-            </div>
-          </div>
+    <!-- EXPLORE PAWCARE FEATURES -->
+    <section class="section features-section" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">YOUR PET'S WORLD</span>
+          <h2>Everything for a <span>happier, healthier pet.</span></h2>
+          <p>Discover resources for the many different parts of pet care.</p>
         </div>
 
-        <a href="#features" class="btn btn-primary about-button">
-          Explore PawCare <span>→</span>
-        </a>
-      </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">🩺</div>
+            <span class="feature-label">01 · HEALTH</span>
+            <h3>Health & Vaccination Tracker</h3>
+            <p>Organize health notes, vaccination dates and upcoming checkups.</p>
+            <a href="#tips" class="text-link">Explore health tips ↗</a>
+          </article>
 
-    </div>
-  </div>
-</section>
+          <article class="feature-card">
+            <div class="feature-icon">🥗</div>
+            <span class="feature-label">02 · NUTRITION</span>
+            <h3>Food & Nutrition Planner</h3>
+            <p>Learn about feeding routines and age-appropriate nutrition.</p>
+            <a href="#tips" class="text-link">Explore nutrition ↗</a>
+          </article>
 
-    <section class="tips-section section" id="tips">
-      <div class="container tips-content">
-        <span class="eyebrow">A HAPPIER, HEALTHIER PET</span>
-        <h2>Little habits make a big difference.</h2>
-        <div class="tips-grid">
-          <div><strong>01 / Nutrition</strong><p>Choose balanced food suited to your pet's needs.</p></div>
-          <div><strong>02 / Exercise</strong><p>Make time for daily movement and play.</p></div>
-          <div><strong>03 / Health</strong><p>Keep up with routine veterinary checkups.</p></div>
+          <article class="feature-card">
+            <div class="feature-icon">🛁</div>
+            <span class="feature-label">03 · HYGIENE</span>
+            <h3>Grooming & Hygiene</h3>
+            <p>Discover bathing, brushing and everyday hygiene guidance.</p>
+            <a href="#services" class="text-link">View grooming services ↗</a>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🎾</div>
+            <span class="feature-label">04 · ACTIVITY</span>
+            <h3>Training & Exercise</h3>
+            <p>Explore positive training ideas, playtime and suitable activities.</p>
+            <a href="#tips" class="text-link">Explore activity tips ↗</a>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🐾</div>
+            <span class="feature-label">05 · ADOPTION</span>
+            <h3>Adoption & Rescue Centre</h3>
+            <p>Learn about responsible adoption and supporting animal rescue.</p>
+            <a href="#adoption" class="text-link">Learn about adoption ↗</a>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🛍️</div>
+            <span class="feature-label">06 · PET STORE</span>
+            <h3>Pet Departmental Store</h3>
+            <p>Browse our planned categories for food, toys, clothes and accessories.</p>
+            <a href="#store" class="text-link">Explore store categories ↗</a>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="booking-section section" id="booking">
+    <!-- ABOUT -->
+    <section class="section about-section" id="about">
+      <div class="container about-grid">
+        <div class="about-photo">
+          <img
+            src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1000&q=85"
+            alt="Dog enjoying time with a companion"
+            loading="lazy"
+          >
+          <div class="photo-caption">A little more love, every day. ♡</div>
+        </div>
+
+        <div class="about-content">
+          <span class="eyebrow">A LITTLE ABOUT US</span>
+          <h2>More than a service. <span>A little more love.</span></h2>
+          <p>
+            PawCare is a pet care portal created to bring useful services
+            and resources together in one convenient place.
+          </p>
+          <p>
+            Whether you are learning about everyday care, exploring
+            grooming and walking services, discovering adoption resources
+            or planning your pet's essentials, our goal is to make the
+            journey simpler for pet parents.
+          </p>
+
+          <div class="about-points">
+            <div><span>✓</span> Easy-to-explore resources</div>
+            <div><span>✓</span> Care guidance for different pets</div>
+            <div><span>✓</span> Services and essentials in one place</div>
+          </div>
+
+          <a href="#features" class="button button-primary">Explore PawCare ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADOPTION -->
+    <section class="section adoption-section" id="adoption">
+      <div class="container adoption-box">
+        <div class="adoption-symbol">🐾</div>
+        <div>
+          <span class="eyebrow">A HOME FULL OF LOVE</span>
+          <h2>Every animal deserves kindness.</h2>
+          <p>
+            Thinking about adoption? Learn about responsible pet ownership,
+            preparing your home and contacting reputable local shelters.
+          </p>
+        </div>
+        <a href="#tips" class="button button-light">Read Our Tips ↗</a>
+      </div>
+    </section>
+
+    <!-- PET CARE TIPS -->
+    <section class="section" id="tips">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">THE LITTLE THINGS MATTER</span>
+          <h2>Simple habits, <span>healthier pets.</span></h2>
+          <p>Start with these general reminders and seek professional advice when needed.</p>
+        </div>
+
+        <div class="tips-grid">
+          <article class="tip-card">
+            <span class="tip-number">TIP 01</span>
+            <div class="tip-icon">💧</div>
+            <h3>Fresh Water</h3>
+            <p>Keep clean drinking water available and refresh it regularly.</p>
+          </article>
+
+          <article class="tip-card">
+            <span class="tip-number">TIP 02</span>
+            <div class="tip-icon">🥣</div>
+            <h3>Suitable Nutrition</h3>
+            <p>Choose food appropriate to your pet's species, life stage and needs.</p>
+          </article>
+
+          <article class="tip-card">
+            <span class="tip-number">TIP 03</span>
+            <div class="tip-icon">🩺</div>
+            <h3>Routine Checkups</h3>
+            <p>Ask a veterinarian about preventive care and vaccination schedules.</p>
+          </article>
+
+          <article class="tip-card">
+            <span class="tip-number">TIP 04</span>
+            <div class="tip-icon">🧸</div>
+            <h3>Play & Enrichment</h3>
+            <p>Offer safe activities, suitable toys and positive interaction.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORE -->
+    <section class="section store-section" id="store">
+      <div class="container store-layout">
+        <div>
+          <span class="eyebrow">COMING TO PAWCARE</span>
+          <h2>A little something for <span>every furry friend.</span></h2>
+          <p>
+            Our planned pet store brings product categories together
+            so pet parents can explore the essentials their companions need.
+          </p>
+          <a href="#booking" class="button button-primary">Ask Us About Pet Care ↗</a>
+        </div>
+
+        <div class="store-categories">
+          <div class="store-item"><span>🦴</span><strong>Food & Treats</strong></div>
+          <div class="store-item"><span>🎾</span><strong>Toys & Play</strong></div>
+          <div class="store-item"><span>👕</span><strong>Pet Clothing</strong></div>
+          <div class="store-item"><span>🧴</span><strong>Hygiene</strong></div>
+          <div class="store-item"><span>🦮</span><strong>Accessories</strong></div>
+          <div class="store-item"><span>🛏️</span><strong>Beds & Comfort</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section class="section booking-section" id="booking">
       <div class="container booking-layout">
         <div class="booking-intro">
-          <span class="eyebrow">LET'S GET STARTED</span>
-          <h2>Your pet's next happy day starts here.</h2>
-          <p>Tell us a little about your pet and the service you're interested in.</p>
+          <span class="eyebrow">LET'S PLAN THEIR CARE</span>
+          <h2>Make time for <span>more happy moments.</span></h2>
+          <p>
+            Fill in the form to request a pet care service.
+            This demo form checks the information in your browser;
+            it does not send or save a booking.
+          </p>
+
+          <div class="booking-note">
+            <span>♡</span>
+            <div>
+              <strong>Every detail counts</strong>
+              <p>Share the information needed to understand your request.</p>
+            </div>
+          </div>
         </div>
 
-        <form id="bookingForm" class="booking-form">
-          <label for="ownerName">Your name</label>
-          <input id="ownerName" name="ownerName" type="text"
-            placeholder="Enter your name" required>
+        <form class="booking-form" action="#booking" method="get">
+          <h3>Request a Service</h3>
+          <p class="form-subtitle">Fields marked * are required.</p>
 
-          <label for="petType">Your pet</label>
-          <select id="petType" name="petType" required>
-            <option value="">Select your pet</option>
-            <option>Dog</option>
-            <option>Cat</option>
-            <option>Rabbit</option>
-            <option>Hamster</option>
-            <option>Bird</option>
-            <option>Turtle</option>
-            <option>Fish</option>
-            <option>Guinea Pig</option>
-            <option>Ferret</option>
-            <option>Other</option>
-          </select>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="owner-name">Your name *</label>
+              <input type="text" id="owner-name" name="owner" placeholder="Enter your name" required>
+            </div>
 
-          <label for="service">Choose a service</label>
-          <select id="service" name="service" required>
-            <option value="">Select a service</option>
-            <option>Grooming</option>
-            <option>Veterinary Care</option>
-            <option>Walking</option>
-            <p>Make room for exercise, fresh air and more tail-wagging moments.</p>
-            <a href="#booking" data-service="Walking">Book a walk →</a>
-            <option>Pet Boarding</option>
-          </select>
+            <div class="form-field">
+              <label for="pet-name">Pet's name *</label>
+              <input type="text" id="pet-name" name="pet" placeholder="Enter pet's name" required>
+            </div>
+          </div>
 
-          <label for="bookingDate">Preferred date</label>
-          <input id="bookingDate" name="bookingDate" type="date" required>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="pet-type">Pet type *</label>
+              <select id="pet-type" name="pet_type" required>
+                <option value="">Select pet type</option>
+                <option>Dog</option>
+                <option>Cat</option>
+                <option>Rabbit</option>
+                <option>Hamster</option>
+                <option>Bird</option>
+                <option>Turtle</option>
+                <option>Fish</option>
+                <option>Guinea Pig</option>
+                <option>Mouse</option>
+                <option>Rat</option>
+                <option>Ferret</option>
+                <option>Reptile</option>
+                <option>Other</option>
+              </select>
+            </div>
 
-          <button class="button button-primary form-button" type="submit">
-            Submit booking request →
-          </button>
-          <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
-          <p class="form-note">Demo only: requests are not saved or sent to a service provider yet.</p>
+            <div class="form-field">
+              <label for="service">Service *</label>
+              <select id="service" name="service" required>
+                <option value="">Choose a service</option>
+                <option>Pet Grooming</option>
+                <option>Veterinary Care</option>
+                <option>Walking</option>
+                <option>Pet Boarding</option>
+                <option>General Pet Care Enquiry</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="booking-date">Preferred date *</label>
+              <input type="date" id="booking-date" name="date" required>
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email address *</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="message">Additional details</label>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us about your pet or your request..."></textarea>
+          </div>
+
+          <button type="submit" class="button button-primary submit-button">Check My Details ↗</button>
+          <p class="form-disclaimer">Demo only — no booking is sent or confirmed.</p>
         </form>
       </div>
     </section>
+
   </main>
 
-  <footer class="footer">
-    <div class="container footer-content">
-      <a class="logo footer-logo" href="#home">🐾 pawcare</a>
-      <p>Made with love for every paw. © <span id="year"></span> PawCare.</p>
-      <a href="#home">Back to top ↑</a>
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand">
+        <a href="#home" class="logo footer-logo">
+          <span class="logo-icon">🐾</span>
+          <span>Paw<span class="logo-accent">Care</span></span>
+        </a>
+        <p>Thoughtful resources for happier pets and the people who love them.</p>
+      </div>
+
+      <div class="footer-links">
+        <h3>Explore</h3>
+        <a href="#services">Services</a>
+        <a href="#features">Explore PawCare</a>
+        <a href="#about">About Us</a>
+      </div>
+
+      <div class="footer-links">
+        <h3>Discover</h3>
+        <a href="#tips">Pet Care Tips</a>
+        <a href="#adoption">Adoption & Rescue</a>
+        <a href="#store">Pet Store</a>
+      </div>
+
+      <div class="footer-links">
+        <h3>Get Started</h3>
+        <a href="#booking">Request a Service</a>
+        <a href="#home">Back to Top ↑</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© <span id="year">2026</span> PawCare. Made with love for pets. 🐾</p>
+      </div>
     </div>
   </footer>
+
+  <script>
+    // Update the year automatically.
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Set the minimum booking date to today.
+    const bookingDate = document.getElementById("booking-date");
+    const today = new Date();
+    const localToday = new Date(
+      today.getTime() - today.getTimezoneOffset() * 60000
+    ).toISOString().split("T")[0];
+
+    bookingDate.min = localToday;
+
+    // Let service links preselect the matching booking option.
+    document.querySelectorAll("[data-service]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        document.getElementById("service").value = link.dataset.service;
+      });
+    });
+
+    // Close the mobile menu after selecting a navigation link.
+    document.querySelectorAll(".navigation a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        document.getElementById("menu-toggle").checked = false;
+      });
+    });
+  </script>
+
 </body>
 </html>
