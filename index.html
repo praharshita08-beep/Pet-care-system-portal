@@ -150,7 +150,150 @@
         </div>
     </section>
 
+    <!-- PET PROFILE MANAGEMENT -->
 
+<section class="section alternate-section" id="pets">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">YOUR PETS, ALL IN ONE PLACE</p>
+            <h2>Every pet has<br><span>a story of their own.</span></h2>
+            <p>
+                Create profiles for your pets and keep their important
+                information organised in one place.
+            </p>
+        </div>
+
+        <div class="pet-profile-layout">
+
+            <!-- ADD OR EDIT A PET -->
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">PET PROFILE</p>
+                        <h3 id="petFormTitle">Add a New Pet</h3>
+                    </div>
+                    <span class="panel-symbol">🐾</span>
+                </div>
+
+                <form id="petProfileForm" class="form-grid">
+
+                    <input type="hidden" id="petProfileId">
+
+                    <label>
+                        Pet Name *
+                        <input
+                            type="text"
+                            id="profilePetName"
+                            placeholder="e.g. Coco"
+                            maxlength="60"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        Pet Type *
+                        <select id="profilePetType" class="pet-type" required>
+                        </select>
+                    </label>
+
+                    <label>
+                        Breed
+                        <input
+                            type="text"
+                            id="profilePetBreed"
+                            placeholder="e.g. Labrador or unknown"
+                            maxlength="80"
+                        >
+                    </label>
+
+                    <label>
+                        Date of Birth
+                        <input
+                            type="date"
+                            id="profilePetBirthDate"
+                        >
+                    </label>
+
+                    <label class="full-width">
+                        Special Notes
+                        <textarea
+                            id="profilePetNotes"
+                            rows="3"
+                            maxlength="1000"
+                            placeholder="Personality, preferences or other useful details"
+                        ></textarea>
+                    </label>
+
+                    <div class="full-width profile-form-actions">
+                        <button
+                            type="submit"
+                            class="button primary-button"
+                            id="savePetButton"
+                        >
+                            Save Pet Profile +
+                        </button>
+
+                        <button
+                            type="button"
+                            class="button outline-button"
+                            id="cancelPetEdit"
+                            hidden
+                        >
+                            Cancel Edit
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+
+            <!-- SAVED PET PROFILES -->
+
+            <div class="pet-profiles-area">
+
+                <div class="pet-profiles-heading">
+                    <div>
+                        <p class="panel-label">YOUR PET FAMILY</p>
+                        <h3>My Pet Profiles</h3>
+                    </div>
+
+                    <span class="count-badge" id="petProfileCount">
+                        0 pets
+                    </span>
+                </div>
+
+                <p class="muted-text">
+                    Save a profile first, then use it to fill in your
+                    health, nutrition, training and service request forms.
+                </p>
+
+                <div
+                    id="petProfilesList"
+                    class="pet-profiles-list"
+                    aria-live="polite"
+                >
+                    <p class="empty-pets">
+                        You haven't added any pets yet.
+                        Create your first pet profile using the form.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p class="small-note">
+            Pet profiles are stored in this browser on this device.
+            They are not automatically shared with your collaborators
+            or other users.
+        </p>
+
+    </div>
+</section>
+
+    
     <!-- 1. HEALTH AND VACCINATION TRACKER -->
 
     <section class="section feature-section" id="health">
