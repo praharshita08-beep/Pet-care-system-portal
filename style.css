@@ -1390,3 +1390,183 @@ h1 span, h2 span {
         transition: none !important;
     }
 }
+/* ==================================
+   PET PROFILE MANAGEMENT
+================================== */
+
+.pet-profile-layout {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    align-items: start;
+    gap: 28px;
+}
+
+.pet-profile-layout > * {
+    min-width: 0;
+}
+
+.pet-profiles-area {
+    padding: 8px 0;
+}
+
+.pet-profiles-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.pet-profiles-heading h3 {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.pet-profiles-heading .panel-label {
+    margin-bottom: 7px;
+}
+
+.pet-profiles-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 22px;
+}
+
+.pet-profile-card {
+    background: white;
+    border: 1px solid #e5e9df;
+    border-radius: 18px;
+    padding: 18px;
+    min-width: 0;
+    box-shadow: 0 8px 24px rgba(23, 79, 59, 0.05);
+}
+
+.pet-profile-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.pet-profile-avatar {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #e8f0e2;
+    border-radius: 15px;
+    font-size: 1.7rem;
+}
+
+.pet-profile-title {
+    min-width: 0;
+    flex: 1;
+}
+
+.pet-profile-title h4 {
+    font-size: 1rem;
+    margin: 2px 0 4px;
+    overflow-wrap: anywhere;
+}
+
+.pet-profile-title p {
+    font-size: 0.75rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.pet-profile-details {
+    background: #f7f9f4;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 14px;
+    overflow-wrap: anywhere;
+}
+
+.pet-profile-details p {
+    font-size: 0.76rem;
+    line-height: 1.65;
+    margin: 0 0 6px;
+}
+
+.pet-profile-details p:last-child {
+    margin-bottom: 0;
+}
+
+.pet-profile-details strong {
+    color: #405d49;
+}
+
+.pet-profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.pet-profile-actions button {
+    flex: 1 1 auto;
+    border: 1px solid #dce5d8;
+    background: white;
+    border-radius: 9px;
+    padding: 8px 10px;
+    color: var(--forest);
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.pet-profile-actions button:hover {
+    background: #edf4e8;
+}
+
+.pet-profile-actions .delete-pet-button {
+    color: #9e4c40;
+    border-color: #efd8d2;
+}
+
+.pet-profile-actions .delete-pet-button:hover {
+    background: #fff0ed;
+}
+
+.empty-pets {
+    grid-column: 1 / -1;
+    background: #f7f9f4;
+    border: 1px dashed #cdd9c9;
+    border-radius: 16px;
+    padding: 25px;
+    color: #748477;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.profile-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.profile-form-actions button {
+    flex: 1 1 auto;
+}
+
+@media (max-width: 850px) {
+    .pet-profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-profiles-area {
+        padding-top: 10px;
+    }
+}
+
+@media (max-width: 520px) {
+    .pet-profiles-list {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-profiles-heading {
+        align-items: flex-start;
+    }
+}
