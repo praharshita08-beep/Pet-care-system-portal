@@ -951,3 +951,332 @@ $("#clearCart").addEventListener("click", () => {
 // Display the initial product list and empty cart.
 renderProducts();
 renderCart();
+/* ==================================
+   PET PROFILE MANAGEMENT
+================================== */
+
+const PET_PROFILE_STORAGE_KEY = "pawcare-pet-profiles";
+
+const petTypeEmojis = {
+    Dog: "🐶",
+    Cat: "🐱",
+    Rabbit: "🐰",
+    Hamster: "🐹",
+    Bird: "🐦",
+    Turtle: "🐢",
+    Fish: "🐠",
+    "Guinea Pig": "🐹",
+    Mouse: "🐭",
+    Rat: "🐭",
+    Ferret: "🦦",
+    Reptile: "🦎",
+    Other: "🐾"
+};
+
+
+// Read saved profiles from this browser.
+function getPetProfiles() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(PET_PROFILE_STORAGE_KEY) || "[]"
+        );
+
+        return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+        console.error("Could not load pet profiles:", error);
+        return [];
+    }
+}
+
+
+// Save profiles to this browser.
+function savePetProfiles(profiles) {
+    try {
+        localStorage.setItem(
+            PET_PROFILE_STORAGE_KEY,
+            JSON.stringify(profiles)
+        );
+
+        return true;
+    } catch (error) {
+        showToast("Could not save profiles in this browser.");
+        return false;
+    }
+}
+
+
+// Reset the form and leave edit mode.
+function resetPetProfileForm() {
+    $("#petProfileForm").reset();
+
+    $("#petProfileId").value = "";
+    $("#petFormTitle").textContent = "Add a New Pet";
+    $("#savePetButton").textContent = "Save Pet Profile +";
+    $("#cancelPetEdit").hidden = true;
+}
+
+
+// Display all saved pet profiles.
+function renderPetProfiles() {
+    const profiles = getPetProfiles();
+    const list = $("#petProfilesList");
+
+    $("#petProfileCount").textContent =
+        `${profiles.length} ${profiles.length === 1 ? "pet" : "pets"}`;
+
+    if (profiles.length === 0) {
+        list.innerHTML = `
+            <p class="empty-pets">
+                You haven't added any pets yet.
+                Create your first pet profile using the form.
+            </p>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = profiles.map(pet => {
+        const emoji = petTypeEmojis[pet.type] || "🐾";
+
+        return `
+            <article class="pet-profile-card">
+
+                <div class="pet-profile-top">
+                    <div class="pet-profile-avatar">${emoji}</div>
+
+                    <div class="pet-profile-title">
+                        <h4>${escapeHTML(pet.name)}</h4>
+                        <p>${escapeHTML(pet.type)}</p>
+                    </div>
+                </div>
+
+                <div class="pet-profile-details">
+
+                    <p>
+                        <strong>Breed:</strong>
+                        ${escapeHTML(pet.breed || "Not specified")}
+                    </p>
+
+                    <p>
+                        <strong>Date of Birth:</strong>
+                        ${escapeHTML(pet.birthDate
+                            ? formatDate(pet.birthDate)
+                            : "Not specified")}
+                    </p>
+
+                    ${
+                        pet.notes
+                            ? `<p><strong>Notes:</strong> ${escapeHTML(pet.notes)}</p>`
+                            : ""
+                    }
+
+                </div>
+
+                <div class="pet-profile-actions">
+
+                    <button
+                        type="button"
+                        data-use-pet="${escapeHTML(pet.id)}"
+                    >
+                        Use in Forms
+                    </button>
+
+                    <button
+                        type="button"
+                        data-edit-pet="${escapeHTML(pet.id)}"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="delete-pet-button"
+                        data-delete-pet="${escapeHTML(pet.id)}"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Add a new profile or update an existing one.
+$("#petProfileForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const id = $("#petProfileId").value;
+
+    const profile = {
+        id: id || (
+            Date.now().toString(36) +
+            Math.random().toString(36).slice(2, 10)
+        ),
+
+        name: $("#profilePetName").value.trim(),
+        type: $("#profilePetType").value,
+        breed: $("#profilePetBreed").value.trim(),
+        birthDate: $("#profilePetBirthDate").value,
+        notes: $("#profilePetNotes").value.trim()
+    };
+
+    if (!profile.name || !profile.type) {
+        showToast("Please enter a pet name and type.");
+        return;
+    }
+
+    if (
+        profile.birthDate &&
+        profile.birthDate > getLocalDate()
+    ) {
+        showToast("Date of birth cannot be in the future.");
+        return;
+    }
+
+    const profiles = getPetProfiles();
+
+    let updatedProfiles;
+
+    if (id) {
+        updatedProfiles = profiles.map(pet =>
+            pet.id === id ? profile : pet
+        );
+    } else {
+        updatedProfiles = [...profiles, profile];
+    }
+
+    if (savePetProfiles(updatedProfiles)) {
+        renderPetProfiles();
+        resetPetProfileForm();
+
+        showToast(
+            id
+                ? "Pet profile updated!"
+                : "Pet profile added!"
+        );
+    }
+});
+
+
+// Handle Edit, Delete and Use in Forms buttons.
+$("#petProfilesList").addEventListener("click", event => {
+
+    const editButton = event.target.closest("[data-edit-pet]");
+    const deleteButton = event.target.closest("[data-delete-pet]");
+    const useButton = event.target.closest("[data-use-pet]");
+
+    const profiles = getPetProfiles();
+
+    // EDIT A PROFILE
+    if (editButton) {
+        const pet = profiles.find(
+            item => item.id === editButton.dataset.editPet
+        );
+
+        if (!pet) return;
+
+        $("#petProfileId").value = pet.id;
+        $("#profilePetName").value = pet.name;
+        $("#profilePetType").value = pet.type;
+        $("#profilePetBreed").value = pet.breed || "";
+        $("#profilePetBirthDate").value = pet.birthDate || "";
+        $("#profilePetNotes").value = pet.notes || "";
+
+        $("#petFormTitle").textContent = "Edit Pet Profile";
+        $("#savePetButton").textContent = "Save Changes ✓";
+        $("#cancelPetEdit").hidden = false;
+
+        $("#petProfileForm").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        return;
+    }
+
+    // DELETE A PROFILE
+    if (deleteButton) {
+        const pet = profiles.find(
+            item => item.id === deleteButton.dataset.deletePet
+        );
+
+        if (!pet) return;
+
+        const confirmed = confirm(
+            `Delete the profile for ${pet.name}?`
+        );
+
+        if (!confirmed) return;
+
+        const updatedProfiles = profiles.filter(
+            item => item.id !== pet.id
+        );
+
+        if (savePetProfiles(updatedProfiles)) {
+            if ($("#petProfileId").value === pet.id) {
+                resetPetProfileForm();
+            }
+
+            renderPetProfiles();
+
+            showToast("Pet profile deleted.");
+        }
+
+        return;
+    }
+
+    // FILL THE EXISTING CARE FORMS
+    if (useButton) {
+        const pet = profiles.find(
+            item => item.id === useButton.dataset.usePet
+        );
+
+        if (!pet) return;
+
+        const fieldValues = {
+            healthPetName: pet.name,
+            healthPetType: pet.type,
+
+            nutritionPetName: pet.name,
+            nutritionPetType: pet.type,
+
+            trainingPetName: pet.name,
+            trainingPetType: pet.type,
+
+            bookingPetName: pet.name,
+            bookingPetType: pet.type
+        };
+
+        Object.entries(fieldValues).forEach(([id, value]) => {
+            const field = document.getElementById(id);
+
+            if (field) {
+                field.value = value;
+            }
+        });
+
+        showToast(
+            `${pet.name}'s details added to the care forms.`
+        );
+
+        return;
+    }
+});
+
+
+// Exit edit mode without saving changes.
+$("#cancelPetEdit").addEventListener("click", () => {
+    resetPetProfileForm();
+    showToast("Editing cancelled.");
+});
+
+
+// Set the date-of-birth limit.
+$("#profilePetBirthDate").max = getLocalDate();
+
+
+// Show profiles already stored in this browser.
+renderPetProfiles();
