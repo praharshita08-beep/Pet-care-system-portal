@@ -3942,3 +3942,118 @@ navigationDropdowns.forEach(dropdown => {
         });
     });
 });
+
+/* ==================================
+   PAWCARE FORM DRAFT SAVING
+   Uses sessionStorage and JSON
+================================== */
+
+function setupPawCareDraft(formId, fieldIds, storageKey, isSaved) {
+    const form = document.getElementById(formId);
+
+    if (!form) {
+        return;
+    }
+
+    // Restore a saved draft when the page opens.
+    try {
+        const savedDraft = sessionStorage.getItem(storageKey);
+
+        if (savedDraft) {
+            const draft = JSON.parse(savedDraft);
+
+            fieldIds.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+
+                if (
+                    field &&
+                    Object.prototype.hasOwnProperty.call(draft, fieldId) &&
+                    typeof draft[fieldId] === "string"
+                ) {
+                    // Restore only options that actually exist.
+                    if (field.tagName === "SELECT") {
+                        const validOption = [...field.options].some(
+                            option => option.value === draft[fieldId]
+                        );
+
+                        field.value = validOption ? draft[fieldId] : "";
+                    } else {
+                        field.value = draft[fieldId];
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Could not restore form draft:", error);
+    }
+
+    // Save current form values as the user types or changes selections.
+    function saveDraft() {
+        const draft = {};
+
+        fieldIds.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+
+            if (field) {
+                draft[fieldId] = field.value;
+            }
+        });
+
+        try {
+            sessionStorage.setItem(storageKey, JSON.stringify(draft));
+        } catch (error) {
+            console.error("Could not save form draft:", error);
+        }
+    }
+
+    fieldIds.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+
+        if (field) {
+            field.addEventListener("input", saveDraft);
+            field.addEventListener("change", saveDraft);
+        }
+    });
+
+    // Clear the draft only after successful submission.
+    form.addEventListener("submit", () => {
+        if (typeof isSaved === "function" && isSaved()) {
+            sessionStorage.removeItem(storageKey);
+        }
+    });
+}
+
+
+// Service booking form draft
+setupPawCareDraft(
+    "bookingForm",
+    [
+        "bookingName",
+        "bookingEmail",
+        "bookingPetName",
+        "bookingPetType",
+        "bookingService",
+        "bookingDate",
+        "bookingNotes"
+    ],
+    "pawcare-booking-draft",
+    () => !$("#bookingConfirmation").hidden
+);
+
+
+// Volunteer assistance request draft
+setupPawCareDraft(
+    "vaRequestForm",
+    [
+        "vaRequestPet",
+        "vaRequestService",
+        "vaRequestArea",
+        "vaRequestDate",
+        "vaRequestTime",
+        "vaRequestDetails"
+    ],
+    "pawcare-assistance-draft",
+    () =>
+        $("#vaRequestPet").value === "" &&
+        $("#vaRequestDetails").value === ""
+);
