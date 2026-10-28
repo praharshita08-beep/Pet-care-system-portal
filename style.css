@@ -2654,3 +2654,65 @@ h1 span, h2 span {
         white-space: normal;
     }
 }
+
+/* ==================================
+   SERVICE RATINGS AND REVIEWS
+================================== */
+
+.service-review-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+}
+
+.service-review-layout > .panel {
+    min-width: 0;
+}
+
+.service-review-summary {
+    padding: 14px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    background: #f1f6ec;
+    color: var(--forest);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.service-review-card {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #f7f9f4;
+    border: 1px solid #e5e9df;
+    border-radius: 14px;
+    overflow-wrap: anywhere;
+}
+
+.service-review-card h4 {
+    margin: 9px 0;
+    font-size: 1rem;
+}
+
+.service-review-stars {
+    color: #b27b1a;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.service-review-card p {
+    margin-bottom: 7px;
+    font-size: 0.8rem;
+    line-height: 1.7;
+}
+
+.service-review-meta {
+    color: var(--muted);
+    font-size: 0.72rem !important;
+}
+
+@media (max-width: 850px) {
+    .service-review-layout {
+        grid-template-columns: 1fr;
+    }
+}
