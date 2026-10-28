@@ -29,8 +29,8 @@
         </button>
 
         <nav id="mainNav">
-             <a href="#pets">My Pets</a>
-
+            <a href="#pets">My Pets</a>
+            <a href="#dashboard">Dashboard</a>
             <a href="#services">Services</a>
             <a href="#health">Health</a>
             <a href="#nutrition">Nutrition</a>
@@ -99,6 +99,178 @@
     </section>
 
 
+<!-- PAWCARE DASHBOARD -->
+
+<section class="section dashboard-section" id="dashboard">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">YOUR PET CARE OVERVIEW</p>
+            <h2>Welcome to your<br><span>PawCare dashboard.</span></h2>
+            <p>
+                Keep your pets, health records and everyday care activities
+                organised from one place.
+            </p>
+        </div>
+
+        <!-- DASHBOARD SUMMARY -->
+
+        <div class="dashboard-stats">
+
+            <article class="dashboard-stat">
+                <span class="dashboard-stat-icon">🐾</span>
+                <p>Registered Pets</p>
+                <strong id="dashboardPetCount">0</strong>
+            </article>
+
+            <article class="dashboard-stat">
+                <span class="dashboard-stat-icon">♡</span>
+                <p>Health Records</p>
+                <strong id="dashboardHealthCount">0</strong>
+            </article>
+
+            <article class="dashboard-stat">
+                <span class="dashboard-stat-icon">🛍</span>
+                <p>Items in Bag</p>
+                <strong id="dashboardCartCount">0</strong>
+            </article>
+
+        </div>
+
+        <!-- SELECT A SAVED PET -->
+
+        <div class="dashboard-main-grid">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">YOUR PET FAMILY</p>
+                        <h3>Selected Pet</h3>
+                    </div>
+                    <span class="panel-symbol">🐶</span>
+                </div>
+
+                <label class="dashboard-select-label" for="dashboardPetSelect">
+                    Choose a saved pet
+                </label>
+
+                <select id="dashboardPetSelect">
+                    <option value="">No pets added yet</option>
+                </select>
+
+                <div
+                    id="dashboardSelectedPetInfo"
+                    class="dashboard-selected-pet"
+                    aria-live="polite"
+                >
+                    <p class="muted-text">
+                        Add a pet in My Pets to see its profile here.
+                    </p>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button
+                        type="button"
+                        id="dashboardUsePet"
+                        class="button primary-button"
+                        disabled
+                    >
+                        Use Pet in Forms
+                    </button>
+
+                    <button
+                        type="button"
+                        id="dashboardEditPet"
+                        class="button outline-button"
+                        disabled
+                    >
+                        Edit Profile
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- QUICK LINKS -->
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">QUICK ACCESS</p>
+                        <h3>What does your pet need?</h3>
+                    </div>
+                    <span class="panel-symbol">✦</span>
+                </div>
+
+                <div class="dashboard-quick-links">
+
+                    <a href="#pets" class="dashboard-quick-link">
+                        <span>🐾</span>
+                        <span>
+                            <strong>My Pets</strong>
+                            <small>Manage pet profiles</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="#health" class="dashboard-quick-link">
+                        <span>♡</span>
+                        <span>
+                            <strong>Health Tracker</strong>
+                            <small>Manage health records</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="#nutrition" class="dashboard-quick-link">
+                        <span>🥣</span>
+                        <span>
+                            <strong>Nutrition Planner</strong>
+                            <small>Organise meal routines</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="#grooming" class="dashboard-quick-link">
+                        <span>✂️</span>
+                        <span>
+                            <strong>Grooming</strong>
+                            <small>Check hygiene tasks</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="#training" class="dashboard-quick-link">
+                        <span>🎾</span>
+                        <span>
+                            <strong>Training</strong>
+                            <small>Plan activities</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="#booking" class="dashboard-quick-link">
+                        <span>📅</span>
+                        <span>
+                            <strong>Service Requests</strong>
+                            <small>Prepare a care request</small>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <p class="small-note">
+            Dashboard information comes from this browser's saved data.
+            It is not synchronised between devices.
+        </p>
+
+    </div>
+</section>
+
+    
     <!-- SERVICES SECTION -->
 
     <section class="section" id="services">
