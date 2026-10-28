@@ -3536,3 +3536,379 @@ $("#tipPetType").addEventListener("change", renderPetTips);
 
 // Load the tips when the page opens.
 loadPetCareTips();
+
+/* ==================================
+   DAILY CARE ROUTINE
+   Drag and Drop API + localStorage
+================================== */
+
+const ROUTINE_STORAGE_KEY = "pawcare-daily-routine";
+
+const defaultRoutineTasks = [
+    {
+        id: "water",
+        label: "Refresh clean drinking water",
+        completed: false
+    },
+    {
+        id: "feeding",
+        label: "Follow the appropriate feeding routine",
+        completed: false
+    },
+    {
+        id: "environment",
+        label: "Check the pet's living space",
+        completed: false
+    },
+    {
+        id: "activity",
+        label: "Plan suitable movement or play",
+        completed: false
+    },
+    {
+        id: "grooming",
+        label: "Check grooming and hygiene needs",
+        completed: false
+    },
+    {
+        id: "enrichment",
+        label: "Provide safe enrichment or interaction",
+        completed: false
+    }
+];
+
+
+// Get the saved tasks, or start with the default routine.
+function getRoutineTasks() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(ROUTINE_STORAGE_KEY) || "null"
+        );
+
+        if (
+            Array.isArray(saved) &&
+            saved.every(task =>
+                task &&
+                typeof task.id === "string" &&
+                typeof task.label === "string" &&
+                typeof task.completed === "boolean"
+            )
+        ) {
+            return saved;
+        }
+    } catch (error) {
+        console.error("Could not load daily routine:", error);
+    }
+
+    return defaultRoutineTasks.map(task => ({ ...task }));
+}
+
+
+// Save the routine to this browser.
+function saveRoutineTasks(tasks) {
+    try {
+        localStorage.setItem(
+            ROUTINE_STORAGE_KEY,
+            JSON.stringify(tasks)
+        );
+
+        return true;
+    } catch (error) {
+        console.error("Could not save daily routine:", error);
+        showToast("Could not save your routine in this browser.");
+        return false;
+    }
+}
+
+
+// Update the progress bar.
+function updateRoutineProgress() {
+    const tasks = getRoutineTasks();
+    const completed = tasks.filter(task => task.completed).length;
+
+    const percentage = tasks.length
+        ? Math.round((completed / tasks.length) * 100)
+        : 0;
+
+    $("#routineProgressText").textContent =
+        `${completed} of ${tasks.length} tasks completed`;
+
+    $("#routineProgressPercent").textContent =
+        `${percentage}%`;
+
+    $("#routineProgressBar").style.width =
+        `${percentage}%`;
+
+    $("#routineProgress").setAttribute(
+        "aria-valuenow",
+        percentage
+    );
+}
+
+
+// Display tasks in their saved order.
+function renderRoutineTasks() {
+    const list = $("#routineTaskList");
+    const tasks = getRoutineTasks();
+
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        const item = document.createElement("li");
+        item.className = "routine-task";
+
+        if (task.completed) {
+            item.classList.add("completed");
+        }
+
+        item.draggable = true;
+        item.dataset.routineId = task.id;
+
+        const handle = document.createElement("span");
+        handle.className = "routine-drag-handle";
+        handle.textContent = "⠿";
+        handle.title = "Drag to reorder";
+        handle.setAttribute("aria-hidden", "true");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "routine-task-checkbox";
+        checkbox.checked = task.completed;
+        checkbox.dataset.routineCheck = task.id;
+        checkbox.setAttribute(
+            "aria-label",
+            "Mark " + task.label + " complete"
+        );
+
+        const label = document.createElement("span");
+        label.className = "routine-task-label";
+        label.textContent = task.label;
+
+        const controls = document.createElement("div");
+        controls.className = "routine-task-controls";
+
+        const upButton = document.createElement("button");
+        upButton.type = "button";
+        upButton.className = "routine-move-button";
+        upButton.textContent = "↑";
+        upButton.title = "Move task up";
+        upButton.setAttribute(
+            "aria-label",
+            "Move " + task.label + " up"
+        );
+        upButton.dataset.routineMove = "up";
+        upButton.disabled = index === 0;
+
+        const downButton = document.createElement("button");
+        downButton.type = "button";
+        downButton.className = "routine-move-button";
+        downButton.textContent = "↓";
+        downButton.title = "Move task down";
+        downButton.setAttribute(
+            "aria-label",
+            "Move " + task.label + " down"
+        );
+        downButton.dataset.routineMove = "down";
+        downButton.disabled = index === tasks.length - 1;
+
+        controls.appendChild(upButton);
+        controls.appendChild(downButton);
+
+        item.appendChild(handle);
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        item.appendChild(controls);
+
+        list.appendChild(item);
+    });
+
+    updateRoutineProgress();
+}
+
+
+// Save the order shown in the list.
+function saveRoutineOrderFromList() {
+    const tasks = getRoutineTasks();
+
+    const taskMap = new Map(
+        tasks.map(task => [task.id, task])
+    );
+
+    const orderedIds = [
+        ...$("#routineTaskList").querySelectorAll(".routine-task")
+    ].map(item => item.dataset.routineId);
+
+    const orderedTasks = orderedIds
+        .map(id => taskMap.get(id))
+        .filter(Boolean);
+
+    if (saveRoutineTasks(orderedTasks)) {
+        updateRoutineProgress();
+        $("#routineStatus").textContent =
+            "Routine order saved in this browser.";
+    }
+}
+
+
+// Respond when a task is checked or unchecked.
+$("#routineTaskList").addEventListener("change", event => {
+    const checkbox = event.target.closest("[data-routine-check]");
+
+    if (!checkbox) {
+        return;
+    }
+
+    const tasks = getRoutineTasks();
+
+    const task = tasks.find(
+        item => item.id === checkbox.dataset.routineCheck
+    );
+
+    if (!task) {
+        return;
+    }
+
+    task.completed = checkbox.checked;
+
+    if (saveRoutineTasks(tasks)) {
+        renderRoutineTasks();
+
+        $("#routineStatus").textContent =
+            "Task progress saved.";
+    }
+});
+
+
+// Move tasks using the arrow buttons.
+$("#routineTaskList").addEventListener("click", event => {
+    const button = event.target.closest("[data-routine-move]");
+
+    if (!button) {
+        return;
+    }
+
+    const item = button.closest(".routine-task");
+
+    if (!item) {
+        return;
+    }
+
+    const list = $("#routineTaskList");
+
+    if (button.dataset.routineMove === "up" && item.previousElementSibling) {
+        list.insertBefore(item, item.previousElementSibling);
+    } else if (
+        button.dataset.routineMove === "down" &&
+        item.nextElementSibling
+    ) {
+        list.insertBefore(item.nextElementSibling, item);
+    }
+
+    saveRoutineOrderFromList();
+    renderRoutineTasks();
+
+    $("#routineStatus").textContent =
+        "Routine order updated.";
+});
+
+
+// Begin a drag operation.
+$("#routineTaskList").addEventListener("dragstart", event => {
+    const item = event.target.closest(".routine-task");
+
+    if (!item) {
+        return;
+    }
+
+    item.classList.add("dragging");
+
+    if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData(
+            "text/plain",
+            item.dataset.routineId
+        );
+    }
+});
+
+
+// Allow the dragged task to be dropped onto the list.
+$("#routineTaskList").addEventListener("dragover", event => {
+    event.preventDefault();
+
+    const list = $("#routineTaskList");
+    const dragging = list.querySelector(".dragging");
+    const target = event.target.closest(".routine-task");
+
+    if (!dragging || !target || dragging === target) {
+        return;
+    }
+
+    const rectangle = target.getBoundingClientRect();
+
+    const placeBefore =
+        event.clientY < rectangle.top + rectangle.height / 2;
+
+    target.classList.add("drop-target");
+
+    if (placeBefore) {
+        list.insertBefore(dragging, target);
+    } else {
+        list.insertBefore(dragging, target.nextSibling);
+    }
+});
+
+
+// Remove drop highlighting when the pointer leaves a task.
+$("#routineTaskList").addEventListener("dragleave", event => {
+    const item = event.target.closest(".routine-task");
+
+    if (item && !item.contains(event.relatedTarget)) {
+        item.classList.remove("drop-target");
+    }
+});
+
+
+// Save the reordered list when a drag ends.
+$("#routineTaskList").addEventListener("dragend", event => {
+    const list = $("#routineTaskList");
+
+    list.querySelectorAll(".routine-task").forEach(item => {
+        item.classList.remove("dragging", "drop-target");
+    });
+
+    saveRoutineOrderFromList();
+    renderRoutineTasks();
+
+    $("#routineStatus").textContent =
+        "Routine order saved in this browser.";
+});
+
+
+// Reset task order and completion states.
+$("#resetRoutine").addEventListener("click", () => {
+    const confirmed = confirm(
+        "Reset the routine to its default tasks and clear completed states?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const freshTasks = defaultRoutineTasks.map(task => ({
+        ...task
+    }));
+
+    if (saveRoutineTasks(freshTasks)) {
+        renderRoutineTasks();
+
+        $("#routineStatus").textContent =
+            "Routine has been reset.";
+
+        showToast("Daily routine reset.");
+    }
+});
+
+
+// Load the saved routine when the page opens.
+renderRoutineTasks();
