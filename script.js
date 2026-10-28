@@ -873,13 +873,17 @@ function renderCart() {
 }
 
 
-// Product category buttons
+// CATEGORY FILTER BUTTONS
 $$(".filter-button").forEach(button => {
     button.addEventListener("click", () => {
         currentCategory = button.dataset.category;
 
+        // Highlight the selected category.
         $$(".filter-button").forEach(item => {
-            item.classList.toggle("active", item === button);
+            item.classList.toggle(
+                "active",
+                item === button
+            );
         });
 
         renderProducts();
@@ -887,9 +891,16 @@ $$(".filter-button").forEach(button => {
 });
 
 
-// Product search
-$("#productSearch").addEventListener("input", renderProducts);
-$("#productSort").addEventListener("change", renderProducts);
+// PRODUCT SEARCH
+$("#productSearch").addEventListener("input", () => {
+    renderProducts();
+});
+
+
+// PRODUCT SORTING
+$("#productSort").addEventListener("change", () => {
+    renderProducts();
+});
 
 // Add products to the cart
 $("#productGrid").addEventListener("click", event => {
