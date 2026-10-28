@@ -4427,3 +4427,36 @@ renderServiceCardRatings();
 $("#serviceReviewForm").addEventListener("submit", () => {
     renderServiceCardRatings();
 });
+
+/* ==================================
+   PAWCARE ERROR HANDLING
+================================== */
+
+// Handle unexpected JavaScript errors.
+window.addEventListener("error", function (event) {
+    console.error(
+        "PawCare JavaScript error:",
+        event.error || event.message
+    );
+
+    if (typeof showToast === "function") {
+        showToast(
+            "Something went wrong. Please refresh the page and try again."
+        );
+    }
+});
+
+
+// Handle failed background asynchronous operations.
+window.addEventListener("unhandledrejection", function (event) {
+    console.error(
+        "PawCare background operation failed:",
+        event.reason
+    );
+
+    if (typeof showToast === "function") {
+        showToast(
+            "An operation could not be completed. Please try again."
+        );
+    }
+});
