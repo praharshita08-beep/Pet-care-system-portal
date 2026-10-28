@@ -1142,7 +1142,7 @@ $("#savedNutritionPlans").addEventListener("click", event => {
         showToast("Feeding plan deleted.");
     }
 });
-
+renderSavedNutritionPlans();
 
 
 /* ==================================
