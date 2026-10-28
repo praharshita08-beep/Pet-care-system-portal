@@ -3118,6 +3118,8 @@ if (!availableFrom || !availableTo || availableFrom >= availableTo) {
         petTypes: petTypeChoices,
         services: serviceChoices,
         availableDays: dayChoices,
+       availableFrom: availableFrom,
+       availableTo: availableTo,
         verified: false,
         createdDate: getLocalDate()
     };
