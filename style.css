@@ -2314,3 +2314,152 @@ h1 span, h2 span {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==================================
+   DAILY CARE ROUTINE PLANNER
+================================== */
+
+.routine-panel {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.routine-progress-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 22px 0 9px;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.routine-progress-info strong {
+    color: var(--forest);
+}
+
+.routine-task-list {
+    display: grid;
+    gap: 11px;
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+}
+
+.routine-task {
+    display: grid;
+    grid-template-columns: 28px 20px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #f7f9f4;
+    border: 1px solid #e5e9df;
+    border-radius: 13px;
+}
+
+.routine-task.dragging {
+    opacity: 0.45;
+    border: 2px dashed var(--green);
+}
+
+.routine-task.drop-target {
+    border-color: var(--green);
+    background: #edf4e8;
+}
+
+.routine-task.completed {
+    background: #edf4e8;
+}
+
+.routine-drag-handle {
+    color: #758778;
+    font-size: 1.25rem;
+    cursor: grab;
+    text-align: center;
+    user-select: none;
+}
+
+.routine-drag-handle:active {
+    cursor: grabbing;
+}
+
+.routine-task-checkbox {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--forest);
+    cursor: pointer;
+}
+
+.routine-task-label {
+    color: var(--ink);
+    font-size: 0.84rem;
+    overflow-wrap: anywhere;
+}
+
+.routine-task.completed .routine-task-label {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
+.routine-task-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.routine-move-button {
+    width: 33px;
+    height: 33px;
+    border: 1px solid #dce5d8;
+    border-radius: 9px;
+    background: white;
+    color: var(--forest);
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.routine-move-button:hover:not(:disabled) {
+    background: #e8f0e2;
+}
+
+.routine-move-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.routine-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 17px;
+    border-top: 1px solid var(--line);
+}
+
+.routine-footer p {
+    margin: 0;
+    font-size: 0.78rem;
+}
+
+@media (max-width: 520px) {
+    .routine-task {
+        grid-template-columns: 22px 20px minmax(0, 1fr);
+        gap: 9px;
+        padding: 12px;
+    }
+
+    .routine-task-controls {
+        grid-column: 3;
+        justify-content: flex-end;
+    }
+
+    .routine-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .routine-footer .button {
+        width: 100%;
+    }
+}
