@@ -2334,3 +2334,35 @@ $("#careRemindersList").addEventListener("click", () => {
 
 // Display the current reminder summary on page load.
 renderDashboardUpcomingReminders();
+
+/* ==================================
+   DASHBOARD FEEDING PLAN COUNT
+================================== */
+
+function updateDashboardNutritionCount() {
+    const countElement = $("#dashboardNutritionCount");
+
+    if (!countElement) {
+        return;
+    }
+
+    const plans = getSavedNutritionPlans();
+
+    countElement.textContent = plans.length;
+}
+
+
+// Update the count when a new feeding plan is saved.
+$("#nutritionForm").addEventListener("submit", () => {
+    updateDashboardNutritionCount();
+});
+
+
+// Update the count when a saved plan is deleted.
+$("#savedNutritionPlans").addEventListener("click", () => {
+    updateDashboardNutritionCount();
+});
+
+
+// Display the saved count when the website loads.
+updateDashboardNutritionCount();
