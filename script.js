@@ -2160,3 +2160,30 @@ renderCareReminders();
 
 // Today's date can be selected or a future date.
 $("#reminderDate").min = getLocalDate();
+
+/* ==================================
+   BOOKING EMAIL VALIDATION
+================================== */
+
+const bookingEmailField = $("#bookingEmail");
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+
+// Check the email whenever the user types.
+bookingEmailField.addEventListener("input", () => {
+    const email = bookingEmailField.value.trim();
+
+    if (email === "") {
+        bookingEmailField.setCustomValidity("");
+        return;
+    }
+
+    if (emailPattern.test(email)) {
+        bookingEmailField.setCustomValidity("");
+    } else {
+        bookingEmailField.setCustomValidity(
+            "Please enter a valid email address, such as name@example.com."
+        );
+    }
+});
