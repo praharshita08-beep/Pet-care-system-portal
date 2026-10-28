@@ -2435,3 +2435,948 @@ $("#dashboardPetSelect").addEventListener(
 
 // Show the saved progress when the website opens.
 updateDashboardGroomingCount();
+
+/* ==========================================
+   PAWCARE VOLUNTEER ASSISTANCE CENTRE
+========================================== */
+
+const VA_KEYS = {
+    requests: "pawcare-va-requests",
+    volunteers: "pawcare-va-volunteers",
+    ratings: "pawcare-va-ratings",
+    reports: "pawcare-va-reports",
+    blocked: "pawcare-va-blocked"
+};
+
+const VA_SERVICES = [
+    "Walking",
+    "Pet Feeding",
+    "Grooming Assistance",
+    "Veterinary Transport",
+    "Temporary Pet Care",
+    "Supply Delivery",
+    "Other"
+];
+
+
+// Read saved data safely.
+function vaRead(key) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(value) ? value : [];
+    } catch (error) {
+        console.error("Could not read Volunteer Centre data:", error);
+        return [];
+    }
+}
+
+
+// Save data safely.
+function vaWrite(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error("Could not save Volunteer Centre data:", error);
+        showToast("Could not save data in this browser.");
+        return false;
+    }
+}
+
+
+function vaId() {
+    return Date.now().toString(36) +
+        Math.random().toString(36).slice(2, 10);
+}
+
+
+function vaNormalise(value) {
+    return String(value || "").trim().toLowerCase();
+}
+
+
+function vaGetVolunteers() {
+    return vaRead(VA_KEYS.volunteers);
+}
+
+
+function vaGetRequests() {
+    return vaRead(VA_KEYS.requests);
+}
+
+
+function vaGetRatings() {
+    return vaRead(VA_KEYS.ratings);
+}
+
+
+function vaGetBlockedIds() {
+    return vaRead(VA_KEYS.blocked);
+}
+
+
+function vaPetEmoji(type) {
+    return petTypeEmojis[type] || "🐾";
+}
+
+
+function vaStatusClass(status) {
+    if (status === "Accepted") return "accepted";
+    if (status === "Completed") return "completed";
+    if (status === "Pending") return "pending";
+    return "";
+}
+
+
+function vaGetVolunteerRating(volunteerId) {
+    const ratings = vaGetRatings().filter(
+        item => item.volunteerId === volunteerId
+    );
+
+    if (!ratings.length) {
+        return "Not rated yet";
+    }
+
+    const total = ratings.reduce(
+        (sum, item) => sum + Number(item.stars),
+        0
+    );
+
+    return (total / ratings.length).toFixed(1) +
+        " / 5 (" + ratings.length + ")";
+}
+
+
+// Generate checkboxes for all pet types.
+function vaBuildPetTypeOptions() {
+    const container = $("#vaVolunteerPetTypes");
+
+    container.innerHTML = petTypes.map(type => `
+        <label class="va-check-option">
+            <input
+                type="checkbox"
+                data-va-pet-type
+                value="${escapeHTML(type)}"
+            >
+            ${escapeHTML(type)}
+        </label>
+    `).join("");
+}
+
+
+// Populate the assistance-request pet dropdown.
+function vaUpdatePetOptions() {
+    const select = $("#vaRequestPet");
+    const previousValue = select.value;
+    const pets = getPetProfiles();
+
+    select.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = pets.length
+        ? "Select a saved pet"
+        : "Add a pet profile first";
+    placeholder.disabled = true;
+
+    select.appendChild(placeholder);
+
+    pets.forEach(pet => {
+        const option = document.createElement("option");
+        option.value = pet.id;
+        option.textContent = pet.name + " (" + pet.type + ")";
+        select.appendChild(option);
+    });
+
+    const exists = pets.some(pet => pet.id === previousValue);
+
+    select.value = exists ? previousValue : "";
+}
+
+
+// Find volunteers whose saved details match a request.
+function vaFindMatches(request) {
+    const volunteers = vaGetVolunteers();
+    const blocked = vaGetBlockedIds();
+
+    const requestArea = vaNormalise(request.area);
+    const requestWeekday = new Date(
+        request.date + "T12:00:00"
+    ).getDay();
+
+    return volunteers.filter(volunteer => {
+        if (!volunteer.verified) return false;
+        if (blocked.includes(volunteer.id)) return false;
+
+        if (!volunteer.services.includes(request.service)) {
+            return false;
+        }
+
+        if (!volunteer.petTypes.includes(request.petType)) {
+            return false;
+        }
+
+        if (!volunteer.availableDays.includes(requestWeekday)) {
+            return false;
+        }
+
+        // Match the general area entered on both profiles.
+        if (vaNormalise(volunteer.area) !== requestArea) {
+            return false;
+        }
+
+        return true;
+    });
+}
+
+
+// Render all assistance requests and their matching volunteers.
+function vaRenderRequests() {
+    const container = $("#vaRequestsList");
+    const requests = vaGetRequests();
+    const volunteers = vaGetVolunteers();
+
+    $("#vaRequestCount").textContent =
+        requests.length + (requests.length === 1 ? " request" : " requests");
+
+    if (!requests.length) {
+        container.innerHTML = `
+            <p class="empty-pets">
+                No assistance requests yet. Create one using the form above.
+            </p>
+        `;
+        return;
+    }
+
+    container.innerHTML = requests.slice().reverse().map(request => {
+        const statusClass = vaStatusClass(request.status);
+        const acceptedVolunteer = volunteers.find(
+            item => item.id === request.acceptedVolunteerId
+        );
+
+        let requestActions = "";
+
+        if (request.status === "Open") {
+            const matches = vaFindMatches(request);
+
+            requestActions = matches.length
+                ? `
+                    <div class="va-match-list">
+                        <strong>Matching verified volunteers</strong>
+
+                        ${matches.map(volunteer => `
+                            <div class="va-match-item">
+                                <strong>
+                                    ${escapeHTML(volunteer.name)}
+                                </strong>
+
+                                <p>
+                                    Rating:
+                                    ${escapeHTML(
+                                        vaGetVolunteerRating(volunteer.id)
+                                    )}
+                                </p>
+
+                                <button
+                                    type="button"
+                                    class="button primary-button"
+                                    data-va-accept="${escapeHTML(request.id)}"
+                                    data-va-volunteer="${escapeHTML(volunteer.id)}"
+                                >
+                                    Accept Request
+                                </button>
+                            </div>
+                        `).join("")}
+                    </div>
+                `
+                : `
+                    <p class="muted-text">
+                        No verified volunteer matches all criteria yet.
+                        A profile may need verification or a matching
+                        area, service, pet type and available day.
+                    </p>
+                `;
+        } else if (request.status === "Accepted") {
+            requestActions = `
+                <p>
+                    <strong>Accepted by:</strong>
+                    ${escapeHTML(
+                        request.acceptedVolunteerName || "Volunteer"
+                    )}
+                </p>
+
+                <button
+                    type="button"
+                    class="button primary-button"
+                    data-va-complete="${escapeHTML(request.id)}"
+                >
+                    Mark Completed
+                </button>
+            `;
+        } else if (request.status === "Completed") {
+            requestActions = `
+                <p>This request is marked as completed.</p>
+            `;
+        }
+
+        return `
+            <article class="va-card">
+
+                <span class="va-status ${statusClass}">
+                    ${escapeHTML(request.status)}
+                </span>
+
+                <h4>
+                    ${escapeHTML(request.petName)} —
+                    ${escapeHTML(request.service)}
+                </h4>
+
+                <p>
+                    <strong>Pet type:</strong>
+                    ${escapeHTML(request.petType)}
+                </p>
+
+                <p>
+                    <strong>General area:</strong>
+                    ${escapeHTML(request.area)}
+                </p>
+
+                <p>
+                    <strong>Scheduled:</strong>
+                    ${escapeHTML(formatDate(request.date))}
+                    at ${escapeHTML(request.time)}
+                </p>
+
+                <p>
+                    <strong>Details:</strong>
+                    ${escapeHTML(request.details)}
+                </p>
+
+                ${requestActions}
+
+                <div class="va-card-actions">
+                    <button
+                        type="button"
+                        class="button outline-button"
+                        data-va-delete-request="${escapeHTML(request.id)}"
+                    >
+                        Remove Request
+                    </button>
+                </div>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Show volunteer profiles and their ratings.
+function vaRenderVolunteers() {
+    const container = $("#vaVolunteersList");
+    const volunteers = vaGetVolunteers();
+    const blocked = vaGetBlockedIds();
+
+    $("#vaVolunteerCount").textContent =
+        volunteers.length +
+        (volunteers.length === 1 ? " volunteer" : " volunteers");
+
+    if (!volunteers.length) {
+        container.innerHTML = `
+            <p class="empty-pets">
+                No volunteers have registered yet.
+            </p>
+        `;
+        return;
+    }
+
+    container.innerHTML = volunteers.slice().reverse().map(volunteer => {
+        const isBlocked = blocked.includes(volunteer.id);
+
+        return `
+            <article class="va-card ${isBlocked ? "va-safety-blocked" : ""}">
+
+                <span class="va-status ${
+                    volunteer.verified ? "" : "pending"
+                }">
+                    ${volunteer.verified ? "Verified (Demo)" : "Pending Verification"}
+                </span>
+
+                ${isBlocked ? `
+                    <span class="va-status pending">Blocked locally</span>
+                ` : ""}
+
+                <h4>${escapeHTML(volunteer.name)}</h4>
+
+                <p>
+                    <strong>General area:</strong>
+                    ${escapeHTML(volunteer.area)}
+                </p>
+
+                <p>
+                    <strong>Pet types:</strong>
+                    ${escapeHTML(volunteer.petTypes.join(", "))}
+                </p>
+
+                <p>
+                    <strong>Services:</strong>
+                    ${escapeHTML(volunteer.services.join(", "))}
+                </p>
+
+                <p>
+                    <strong>Available days:</strong>
+                    ${escapeHTML(
+                        volunteer.availableDays
+                            .map(day => [
+                                "Sunday", "Monday", "Tuesday",
+                                "Wednesday", "Thursday", "Friday",
+                                "Saturday"
+                            ][day])
+                            .join(", ")
+                    )}
+                </p>
+
+                ${volunteer.notes ? `
+                    <p>
+                        <strong>Notes:</strong>
+                        ${escapeHTML(volunteer.notes)}
+                    </p>
+                ` : ""}
+
+                <p class="va-rating-text">
+                    ★ ${escapeHTML(
+                        vaGetVolunteerRating(volunteer.id)
+                    )}
+                </p>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Populate the volunteer picker used by the report/block tools.
+function vaUpdateSafetyOptions() {
+    const select = $("#vaSafetyVolunteer");
+    const previous = select.value;
+    const volunteers = vaGetVolunteers();
+    const blocked = vaGetBlockedIds();
+
+    select.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select a volunteer";
+    placeholder.disabled = true;
+    select.appendChild(placeholder);
+
+    volunteers.forEach(volunteer => {
+        const option = document.createElement("option");
+        option.value = volunteer.id;
+
+        option.textContent =
+            volunteer.name +
+            (blocked.includes(volunteer.id) ? " (Blocked)" : "");
+
+        select.appendChild(option);
+    });
+
+    select.value = volunteers.some(
+        volunteer => volunteer.id === previous
+    ) ? previous : "";
+
+    vaUpdateBlockButton();
+}
+
+
+function vaUpdateBlockButton() {
+    const select = $("#vaSafetyVolunteer");
+    const button = $("#vaBlockToggle");
+    const volunteerId = select.value;
+
+    button.disabled = !volunteerId;
+
+    button.textContent = vaGetBlockedIds().includes(volunteerId)
+        ? "Unblock Selected Volunteer"
+        : "Block Selected Volunteer";
+}
+
+
+// Render admin verification controls and recorded reports.
+function vaRenderAdmin() {
+    const container = $("#vaAdminList");
+    const volunteers = vaGetVolunteers();
+    const reportsContainer = $("#vaReportsList");
+    const reports = vaRead(VA_KEYS.reports);
+
+    if (!volunteers.length) {
+        container.innerHTML = `
+            <p class="muted-text">No volunteer profiles to review.</p>
+        `;
+    } else {
+        container.innerHTML = volunteers.map(volunteer => `
+            <article class="record-item">
+                <div>
+                    <strong>${escapeHTML(volunteer.name)}</strong>
+
+                    <small>
+                        ${escapeHTML(volunteer.area)} ·
+                        ${volunteer.verified
+                            ? "Verified (Demo)"
+                            : "Pending Verification"}
+                    </small>
+                </div>
+
+                <button
+                    type="button"
+                    class="record-delete"
+                    data-va-verify="${escapeHTML(volunteer.id)}"
+                >
+                    ${volunteer.verified ? "Unverify" : "Verify"}
+                </button>
+            </article>
+        `).join("");
+    }
+
+    if (!reports.length) {
+        reportsContainer.innerHTML = `
+            <p class="muted-text">No reports submitted.</p>
+        `;
+    } else {
+        reportsContainer.innerHTML = reports.slice().reverse().map(report => `
+            <article class="record-item">
+                <div>
+                    <strong>
+                        Report: ${escapeHTML(report.volunteerName)}
+                    </strong>
+                    <small>${escapeHTML(formatDate(report.date))}</small>
+                    <small>${escapeHTML(report.reason)}</small>
+                    <small>Status: Locally Recorded</small>
+                </div>
+            </article>
+        `).join("");
+    }
+}
+
+
+// Fill the rating dropdown with completed, not-yet-rated requests.
+function vaUpdateRatingOptions() {
+    const select = $("#vaRatingRequest");
+    const previous = select.value;
+    const requests = vaGetRequests();
+    const ratings = vaGetRatings();
+
+    select.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select a completed request";
+    placeholder.disabled = true;
+    select.appendChild(placeholder);
+
+    requests.filter(request =>
+        request.status === "Completed" &&
+        !ratings.some(rating => rating.requestId === request.id)
+    ).forEach(request => {
+        const option = document.createElement("option");
+        option.value = request.id;
+        option.textContent =
+            request.petName + " — " +
+            request.service + " — " +
+            (request.acceptedVolunteerName || "Volunteer");
+
+        select.appendChild(option);
+    });
+
+    const exists = [...select.options].some(
+        option => option.value === previous
+    );
+
+    select.value = exists ? previous : "";
+}
+
+
+// Render all parts of the Volunteer Centre.
+function vaRenderAll() {
+    vaUpdatePetOptions();
+    vaRenderRequests();
+    vaRenderVolunteers();
+    vaRenderAdmin();
+    vaUpdateSafetyOptions();
+    vaUpdateRatingOptions();
+}
+
+
+/* CREATE ASSISTANCE REQUEST */
+
+$("#vaRequestForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const petId = $("#vaRequestPet").value;
+    const pets = getPetProfiles();
+    const pet = pets.find(item => item.id === petId);
+
+    if (!pet) {
+        showToast("Please add and select a saved pet profile.");
+        return;
+    }
+
+    const date = $("#vaRequestDate").value;
+
+    if (!date || date < getLocalDate()) {
+        showToast("Choose today or a future date.");
+        return;
+    }
+
+    const request = {
+        id: vaId(),
+        petId: pet.id,
+        petName: pet.name,
+        petType: pet.type,
+        service: $("#vaRequestService").value,
+        area: $("#vaRequestArea").value.trim(),
+        date: date,
+        time: $("#vaRequestTime").value,
+        details: $("#vaRequestDetails").value.trim(),
+        status: "Open",
+        acceptedVolunteerId: "",
+        acceptedVolunteerName: "",
+        createdDate: getLocalDate()
+    };
+
+    if (
+        !request.service ||
+        !request.area ||
+        !request.time ||
+        !request.details
+    ) {
+        showToast("Please complete all required fields.");
+        return;
+    }
+
+    const requests = vaGetRequests();
+    requests.push(request);
+
+    if (vaWrite(VA_KEYS.requests, requests)) {
+        $("#vaRequestForm").reset();
+        $("#vaRequestDate").min = getLocalDate();
+
+        vaRenderAll();
+        showToast("Assistance request saved.");
+    }
+});
+
+
+/* CREATE VOLUNTEER PROFILE */
+
+$("#vaVolunteerForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const name = $("#vaVolunteerName").value.trim();
+    const area = $("#vaVolunteerArea").value.trim();
+    const notes = $("#vaVolunteerNotes").value.trim();
+
+    const petTypeChoices = $$(
+        "[data-va-pet-type]:checked",
+        $("#vaVolunteerForm")
+    ).map(input => input.value);
+
+    const serviceChoices = $$(
+        "[data-va-service]:checked",
+        $("#vaVolunteerForm")
+    ).map(input => input.value);
+
+    const dayChoices = $$(
+        "[data-va-day]:checked",
+        $("#vaVolunteerForm")
+    ).map(input => Number(input.value));
+
+    if (
+        !name ||
+        !area ||
+        !petTypeChoices.length ||
+        !serviceChoices.length ||
+        !dayChoices.length
+    ) {
+        showToast(
+            "Add a name, area, pet type, service and available day."
+        );
+        return;
+    }
+
+    const volunteer = {
+        id: vaId(),
+        name: name,
+        area: area,
+        notes: notes,
+        petTypes: petTypeChoices,
+        services: serviceChoices,
+        availableDays: dayChoices,
+        verified: false,
+        createdDate: getLocalDate()
+    };
+
+    const volunteers = vaGetVolunteers();
+    volunteers.push(volunteer);
+
+    if (vaWrite(VA_KEYS.volunteers, volunteers)) {
+        $("#vaVolunteerForm").reset();
+
+        vaRenderAll();
+        showToast("Volunteer profile saved as pending verification.");
+    }
+});
+
+
+/* HANDLE ASSISTANCE REQUEST ACTIONS */
+
+$("#vaRequestsList").addEventListener("click", event => {
+    const acceptButton = event.target.closest("[data-va-accept]");
+    const completeButton = event.target.closest("[data-va-complete]");
+    const deleteButton = event.target.closest("[data-va-delete-request]");
+
+    const requests = vaGetRequests();
+
+    if (acceptButton) {
+        const request = requests.find(
+            item => item.id === acceptButton.dataset.vaAccept
+        );
+
+        const volunteer = vaGetVolunteers().find(
+            item => item.id === acceptButton.dataset.vaVolunteer
+        );
+
+        if (!request || request.status !== "Open" || !volunteer) {
+            showToast("This request is no longer open.");
+            return;
+        }
+
+        if (!vaFindMatches(request).some(
+            item => item.id === volunteer.id
+        )) {
+            showToast("This volunteer no longer matches the request.");
+            return;
+        }
+
+        request.status = "Accepted";
+        request.acceptedVolunteerId = volunteer.id;
+        request.acceptedVolunteerName = volunteer.name;
+
+        if (vaWrite(VA_KEYS.requests, requests)) {
+            vaRenderAll();
+            showToast("Request accepted in this demo.");
+        }
+
+        return;
+    }
+
+    if (completeButton) {
+        const request = requests.find(
+            item => item.id === completeButton.dataset.vaComplete
+        );
+
+        if (!request || request.status !== "Accepted") {
+            return;
+        }
+
+        request.status = "Completed";
+
+        if (vaWrite(VA_KEYS.requests, requests)) {
+            vaRenderAll();
+            showToast("Request marked as completed.");
+        }
+
+        return;
+    }
+
+    if (deleteButton) {
+        const confirmed = confirm(
+            "Remove this assistance request?"
+        );
+
+        if (!confirmed) return;
+
+        const updated = requests.filter(
+            item => item.id !== deleteButton.dataset.vaDeleteRequest
+        );
+
+        if (vaWrite(VA_KEYS.requests, updated)) {
+            vaRenderAll();
+            showToast("Request removed.");
+        }
+    }
+});
+
+
+/* ADMIN DEMO VERIFICATION */
+
+$("#vaAdminList").addEventListener("click", event => {
+    const button = event.target.closest("[data-va-verify]");
+
+    if (!button) return;
+
+    const volunteerId = button.dataset.vaVerify;
+    const volunteers = vaGetVolunteers();
+
+    const volunteer = volunteers.find(
+        item => item.id === volunteerId
+    );
+
+    if (!volunteer) return;
+
+    volunteer.verified = !volunteer.verified;
+
+    if (vaWrite(VA_KEYS.volunteers, volunteers)) {
+        vaRenderAll();
+
+        showToast(
+            volunteer.verified
+                ? "Profile marked verified in this demo."
+                : "Verification removed."
+        );
+    }
+});
+
+
+/* REPORT A VOLUNTEER */
+
+$("#vaReportForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const volunteerId = $("#vaSafetyVolunteer").value;
+    const reason = $("#vaReportReason").value.trim();
+
+    const volunteer = vaGetVolunteers().find(
+        item => item.id === volunteerId
+    );
+
+    if (!volunteer || !reason) {
+        showToast("Select a volunteer and enter report details.");
+        return;
+    }
+
+    const reports = vaRead(VA_KEYS.reports);
+
+    reports.push({
+        id: vaId(),
+        volunteerId: volunteer.id,
+        volunteerName: volunteer.name,
+        reason: reason,
+        date: getLocalDate(),
+        status: "Locally Recorded"
+    });
+
+    if (vaWrite(VA_KEYS.reports, reports)) {
+        $("#vaReportReason").value = "";
+
+        vaRenderAll();
+        showToast("Report saved locally in this demo.");
+    }
+});
+
+
+/* BLOCK OR UNBLOCK A VOLUNTEER */
+
+$("#vaSafetyVolunteer").addEventListener("change", () => {
+    vaUpdateBlockButton();
+});
+
+$("#vaBlockToggle").addEventListener("click", () => {
+    const volunteerId = $("#vaSafetyVolunteer").value;
+
+    if (!volunteerId) {
+        showToast("Select a volunteer first.");
+        return;
+    }
+
+    const volunteer = vaGetVolunteers().find(
+        item => item.id === volunteerId
+    );
+
+    if (!volunteer) return;
+
+    let blocked = vaGetBlockedIds();
+
+    if (blocked.includes(volunteerId)) {
+        blocked = blocked.filter(id => id !== volunteerId);
+    } else {
+        if (!confirm(
+            "Block this volunteer from matching in this browser?"
+        )) {
+            return;
+        }
+
+        blocked.push(volunteerId);
+    }
+
+    if (vaWrite(VA_KEYS.blocked, blocked)) {
+        vaRenderAll();
+
+        showToast(
+            blocked.includes(volunteerId)
+                ? "Volunteer blocked in this browser."
+                : "Volunteer unblocked."
+        );
+    }
+});
+
+
+/* RATE A COMPLETED REQUEST */
+
+$("#vaRatingForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const requestId = $("#vaRatingRequest").value;
+    const stars = Number($("#vaRatingStars").value);
+    const comment = $("#vaRatingComment").value.trim();
+
+    const request = vaGetRequests().find(
+        item => item.id === requestId
+    );
+
+    if (
+        !request ||
+        request.status !== "Completed" ||
+        stars < 1 ||
+        stars > 5
+    ) {
+        showToast("Select a completed request and a rating.");
+        return;
+    }
+
+    const ratings = vaGetRatings();
+
+    if (ratings.some(item => item.requestId === request.id)) {
+        showToast("This request has already been rated.");
+        return;
+    }
+
+    ratings.push({
+        id: vaId(),
+        requestId: request.id,
+        volunteerId: request.acceptedVolunteerId,
+        stars: stars,
+        comment: comment,
+        date: getLocalDate()
+    });
+
+    if (vaWrite(VA_KEYS.ratings, ratings)) {
+        $("#vaRatingForm").reset();
+
+        vaRenderAll();
+        showToast("Rating saved in this browser.");
+    }
+});
+
+
+/* INITIALISE VOLUNTEER ASSISTANCE */
+
+$("#vaRequestDate").min = getLocalDate();
+
+vaBuildPetTypeOptions();
+vaRenderAll();
+
+
+// Keep volunteer request dropdown current after pet profile changes.
+$("#petProfileForm").addEventListener("submit", () => {
+    vaUpdatePetOptions();
+});
