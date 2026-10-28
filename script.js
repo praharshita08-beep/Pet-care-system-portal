@@ -884,7 +884,7 @@ $$(".filter-button").forEach(button => {
 
 // Product search
 $("#productSearch").addEventListener("input", renderProducts);
-
+$("#productSort").addEventListener("change", renderProducts);
 
 // Add products to the cart
 $("#productGrid").addEventListener("click", event => {
