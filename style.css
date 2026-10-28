@@ -1990,3 +1990,193 @@ h1 span, h2 span {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==================================
+   VOLUNTEER ASSISTANCE CENTRE
+================================== */
+
+.volunteer-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+}
+
+.va-content-section {
+    margin-top: 32px;
+}
+
+.va-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 16px;
+}
+
+.va-section-heading h3 {
+    margin: 0;
+    font-size: 1.55rem;
+}
+
+.va-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 8px;
+}
+
+.form-group-label {
+    color: #52675a;
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+.va-check-option {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px !important;
+    padding: 10px;
+    border: 1px solid #e5e9df;
+    border-radius: 10px;
+    background: #f7f9f4;
+    cursor: pointer;
+    font-size: 0.76rem !important;
+}
+
+.va-check-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--forest);
+    flex-shrink: 0;
+}
+
+.va-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.va-card {
+    background: white;
+    border: 1px solid #e5e9df;
+    border-radius: 17px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(23, 79, 59, 0.05);
+    min-width: 0;
+}
+
+.va-card h4 {
+    font-size: 1.08rem;
+    margin: 10px 0;
+    overflow-wrap: anywhere;
+}
+
+.va-card p {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+}
+
+.va-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.va-card-actions .button {
+    padding: 9px 12px;
+    font-size: 0.75rem;
+}
+
+.va-status {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 30px;
+    background: #e8f0e2;
+    color: #245d40;
+    font-size: 0.68rem;
+    font-weight: 800;
+}
+
+.va-status.pending {
+    background: #fff0d5;
+    color: #81591b;
+}
+
+.va-status.accepted {
+    background: #dcecf4;
+    color: #315a70;
+}
+
+.va-status.completed {
+    background: #e4e8e2;
+    color: #526052;
+}
+
+.va-match-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid var(--line);
+}
+
+.va-match-item {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f4f7ef;
+}
+
+.va-match-item strong {
+    display: block;
+    font-size: 0.85rem;
+}
+
+.va-match-item p {
+    margin: 3px 0 8px;
+    font-size: 0.73rem;
+}
+
+.va-match-item button {
+    width: 100%;
+}
+
+.va-rating-text {
+    color: #775c18;
+    font-weight: 800;
+}
+
+.va-safety-blocked {
+    border-color: #efc8bf;
+    background: #fff7f5;
+}
+
+@media (max-width: 850px) {
+    .volunteer-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .va-card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .va-checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .va-section-heading {
+        align-items: flex-start;
+    }
+
+    .va-card {
+        padding: 16px;
+    }
+}
