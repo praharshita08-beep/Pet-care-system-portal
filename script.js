@@ -3912,3 +3912,33 @@ $("#resetRoutine").addEventListener("click", () => {
 
 // Load the saved routine when the page opens.
 renderRoutineTasks();
+
+/* ==================================
+   NAVIGATION DROPDOWN BEHAVIOUR
+================================== */
+
+const navigationDropdowns = $$(".nav-dropdown");
+
+navigationDropdowns.forEach(dropdown => {
+    dropdown.addEventListener("toggle", () => {
+        if (!dropdown.open) {
+            return;
+        }
+
+        // Close any other open navigation dropdown.
+        navigationDropdowns.forEach(otherDropdown => {
+            if (otherDropdown !== dropdown) {
+                otherDropdown.open = false;
+            }
+        });
+    });
+});
+
+// Close a dropdown after the user selects a menu link.
+navigationDropdowns.forEach(dropdown => {
+    $$("a", dropdown).forEach(link => {
+        link.addEventListener("click", () => {
+            dropdown.open = false;
+        });
+    });
+});
