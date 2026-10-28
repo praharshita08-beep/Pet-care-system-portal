@@ -2568,3 +2568,89 @@ h1 span, h2 span {
         white-space: normal;
     }
 }
+
+/* ==================================
+   PROFESSIONAL NAVIGATION DROPDOWNS
+================================== */
+
+.nav-dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 300;
+
+    width: 245px;
+    padding: 8px;
+
+    background: #fffdf8;
+    border: 1px solid #e2e9de;
+    border-radius: 14px;
+
+    box-shadow: 0 14px 32px rgba(23, 79, 59, 0.14);
+
+    /* Always display menu items in one vertical column. */
+    grid-template-columns: 1fr;
+    gap: 3px;
+}
+
+.nav-dropdown[open] > .nav-dropdown-menu {
+    display: grid;
+}
+
+.nav-dropdown-menu a {
+    display: block;
+    width: 100%;
+    padding: 11px 13px;
+
+    border-radius: 9px;
+    color: #53675a;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    white-space: normal;
+
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-dropdown-menu a:hover {
+    background: #edf4e8;
+    color: #174f3b;
+}
+
+.nav-dropdown > summary {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nav-dropdown > summary:focus-visible {
+    outline: 2px solid #6f9a69;
+    outline-offset: 4px;
+    border-radius: 5px;
+}
+
+/* Mobile dropdowns stay inside the expanded navigation. */
+@media (max-width: 850px) {
+    nav .nav-dropdown-menu {
+        position: static;
+        width: 100%;
+        padding: 5px 0 8px 14px;
+
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+
+    nav .nav-dropdown-menu a {
+        padding: 10px 12px;
+        white-space: normal;
+    }
+}
