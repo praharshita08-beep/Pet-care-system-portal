@@ -3074,6 +3074,13 @@ $("#vaVolunteerForm").addEventListener("submit", event => {
     const name = $("#vaVolunteerName").value.trim();
     const area = $("#vaVolunteerArea").value.trim();
     const notes = $("#vaVolunteerNotes").value.trim();
+   const availableFrom = $("#vaVolunteerStart").value;
+const availableTo = $("#vaVolunteerEnd").value;
+
+if (!availableFrom || !availableTo || availableFrom >= availableTo) {
+    showToast("Choose valid volunteer availability hours.");
+    return;
+}
 
     const petTypeChoices = $$(
         "[data-va-pet-type]:checked",
