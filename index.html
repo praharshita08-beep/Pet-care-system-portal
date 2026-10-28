@@ -39,6 +39,7 @@
             <a href="#adoption">Adoption</a>
             <a href="#store">Pet Store</a>
             <a href="#booking" class="nav-button">Book a Service ↗</a>
+            <a href="#assistance">Volunteer Assistance</a>
         </nav>
 
     </div>
@@ -1075,6 +1076,415 @@
         </div>
     </section>
 
+
+    <!-- VOLUNTEER ASSISTANCE CENTRE -->
+
+<section class="section alternate-section" id="assistance">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">COMMUNITY PET CARE</p>
+            <h2>A little help.<br><span>A lot of love.</span></h2>
+            <p>
+                Create assistance requests, register volunteer profiles,
+                find suitable matches and organise pet-care activities.
+            </p>
+        </div>
+
+        <!-- CREATE AN ASSISTANCE REQUEST -->
+
+        <div class="volunteer-layout">
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">NEED A HAND?</p>
+                        <h3>Request Assistance</h3>
+                    </div>
+                    <span class="panel-symbol">🐾</span>
+                </div>
+
+                <form id="vaRequestForm" class="form-grid">
+
+                    <label class="full-width">
+                        Pet *
+                        <select id="vaRequestPet" required>
+                            <option value="">Select a saved pet</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Assistance Needed *
+                        <select id="vaRequestService" required>
+                            <option value="">Choose assistance</option>
+                            <option value="Walking">Walking</option>
+                            <option value="Pet Feeding">Pet Feeding</option>
+                            <option value="Grooming Assistance">Grooming Assistance</option>
+                            <option value="Veterinary Transport">Veterinary Transport</option>
+                            <option value="Temporary Pet Care">Temporary Pet Care</option>
+                            <option value="Supply Delivery">Supply Delivery</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        General Area *
+                        <input
+                            type="text"
+                            id="vaRequestArea"
+                            maxlength="80"
+                            placeholder="e.g. Phagwara"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        Preferred Date *
+                        <input type="date" id="vaRequestDate" required>
+                    </label>
+
+                    <label>
+                        Preferred Time *
+                        <input type="time" id="vaRequestTime" required>
+                    </label>
+
+                    <label class="full-width">
+                        Details *
+                        <textarea
+                            id="vaRequestDetails"
+                            rows="3"
+                            maxlength="600"
+                            placeholder="Explain the assistance needed. Do not include private contact information."
+                            required
+                        ></textarea>
+                    </label>
+
+                    <button type="submit" class="button primary-button full-width">
+                        Create Assistance Request +
+                    </button>
+
+                </form>
+
+                <p class="small-note">
+                    This demo records requests in the current browser.
+                    It does not contact volunteers or guarantee assistance.
+                </p>
+            </div>
+
+
+            <!-- VOLUNTEER PROFILE FORM -->
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">HELP PETS IN YOUR COMMUNITY</p>
+                        <h3>Volunteer Profile</h3>
+                    </div>
+                    <span class="panel-symbol">♡</span>
+                </div>
+
+                <form id="vaVolunteerForm" class="form-grid">
+
+                    <label class="full-width">
+                        Display Name *
+                        <input
+                            type="text"
+                            id="vaVolunteerName"
+                            maxlength="60"
+                            placeholder="Enter a display name"
+                            required
+                        >
+                    </label>
+
+                    <label class="full-width">
+                        General Area *
+                        <input
+                            type="text"
+                            id="vaVolunteerArea"
+                            maxlength="80"
+                            placeholder="e.g. Phagwara"
+                            required
+                        >
+                    </label>
+
+                    <div class="full-width">
+                        <p class="form-group-label">Pet Types You Can Help With *</p>
+                        <div id="vaVolunteerPetTypes" class="va-checkbox-grid"></div>
+                    </div>
+
+                    <div class="full-width">
+                        <p class="form-group-label">Services You Can Offer *</p>
+                        <div class="va-checkbox-grid">
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Walking">
+                                Walking
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Pet Feeding">
+                                Pet Feeding
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Grooming Assistance">
+                                Grooming Assistance
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Veterinary Transport">
+                                Veterinary Transport
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Temporary Pet Care">
+                                Temporary Pet Care
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Supply Delivery">
+                                Supply Delivery
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-service value="Other">
+                                Other
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="full-width">
+                        <p class="form-group-label">Days Available *</p>
+                        <div class="va-checkbox-grid">
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="0"> Sunday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="1"> Monday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="2"> Tuesday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="3"> Wednesday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="4"> Thursday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="5"> Friday
+                            </label>
+                            <label class="va-check-option">
+                                <input type="checkbox" data-va-day value="6"> Saturday
+                            </label>
+                        </div>
+                    </div>
+
+                    <label class="full-width">
+                        Experience or Notes
+                        <textarea
+                            id="vaVolunteerNotes"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Share relevant experience or limitations."
+                        ></textarea>
+                    </label>
+
+                    <button type="submit" class="button primary-button full-width">
+                        Save Volunteer Profile +
+                    </button>
+
+                </form>
+
+                <p class="small-note">
+                    New profiles start as Pending. They must be marked
+                    verified in the demo admin panel before matching.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- ASSISTANCE REQUESTS AND MATCHING -->
+
+        <div class="va-content-section">
+            <div class="va-section-heading">
+                <div>
+                    <p class="panel-label">REQUESTS AND MATCHING</p>
+                    <h3>Assistance Board</h3>
+                </div>
+                <span id="vaRequestCount" class="count-badge">0 requests</span>
+            </div>
+
+            <p class="muted-text">
+                Matching uses service type, pet type, general area,
+                volunteer availability and demo verification status.
+            </p>
+
+            <div id="vaRequestsList" class="va-card-grid" aria-live="polite">
+                <p class="empty-pets">
+                    No assistance requests yet.
+                </p>
+            </div>
+        </div>
+
+
+        <!-- VOLUNTEER PROFILES -->
+
+        <div class="va-content-section">
+            <div class="va-section-heading">
+                <div>
+                    <p class="panel-label">COMMUNITY MEMBERS</p>
+                    <h3>Volunteer Directory</h3>
+                </div>
+                <span id="vaVolunteerCount" class="count-badge">0 volunteers</span>
+            </div>
+
+            <div id="vaVolunteersList" class="va-card-grid" aria-live="polite">
+                <p class="empty-pets">
+                    No volunteer profiles yet.
+                </p>
+            </div>
+        </div>
+
+
+        <!-- RATINGS -->
+
+        <div class="panel va-content-section">
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-label">SHARE FEEDBACK</p>
+                    <h3>Rate a Completed Request</h3>
+                </div>
+                <span class="panel-symbol">★</span>
+            </div>
+
+            <form id="vaRatingForm" class="form-grid">
+
+                <label class="full-width">
+                    Completed Request *
+                    <select id="vaRatingRequest" required>
+                        <option value="">Select a completed request</option>
+                    </select>
+                </label>
+
+                <label>
+                    Rating *
+                    <select id="vaRatingStars" required>
+                        <option value="">Choose rating</option>
+                        <option value="5">5 — Excellent</option>
+                        <option value="4">4 — Very Good</option>
+                        <option value="3">3 — Good</option>
+                        <option value="2">2 — Fair</option>
+                        <option value="1">1 — Needs Improvement</option>
+                    </select>
+                </label>
+
+                <label class="full-width">
+                    Comments
+                    <textarea
+                        id="vaRatingComment"
+                        rows="3"
+                        maxlength="400"
+                        placeholder="Optional feedback"
+                    ></textarea>
+                </label>
+
+                <button type="submit" class="button primary-button full-width">
+                    Submit Rating
+                </button>
+
+            </form>
+
+            <p class="small-note">
+                Ratings in this demonstration are local and are not independently verified.
+            </p>
+        </div>
+
+
+        <!-- REPORT AND BLOCK CONTROLS -->
+
+        <div class="panel va-content-section">
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-label">SAFETY TOOLS</p>
+                    <h3>Report or Block a Volunteer</h3>
+                </div>
+                <span class="panel-symbol">🛡️</span>
+            </div>
+
+            <form id="vaReportForm" class="form-grid">
+
+                <label class="full-width">
+                    Volunteer *
+                    <select id="vaSafetyVolunteer" required>
+                        <option value="">Select a volunteer</option>
+                    </select>
+                </label>
+
+                <label class="full-width">
+                    Report Details *
+                    <textarea
+                        id="vaReportReason"
+                        rows="3"
+                        maxlength="500"
+                        placeholder="Describe the concern without including private information."
+                        required
+                    ></textarea>
+                </label>
+
+                <button type="submit" class="button outline-button full-width">
+                    Submit Report
+                </button>
+
+            </form>
+
+            <button
+                type="button"
+                id="vaBlockToggle"
+                class="button outline-button"
+                disabled
+            >
+                Block Selected Volunteer
+            </button>
+
+            <p class="small-note">
+                Blocking excludes a profile from matching in this browser.
+                Reports are recorded locally and are not sent to a real moderator.
+                If you feel unsafe, involve a trusted adult.
+            </p>
+
+            <div id="vaSafetyMessage" class="result-box" aria-live="polite" hidden></div>
+        </div>
+
+
+        <!-- DEMO ADMIN VERIFICATION -->
+
+        <div class="panel va-content-section">
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-label">DEMO ADMIN AREA</p>
+                    <h3>Volunteer Verification</h3>
+                </div>
+                <span class="panel-symbol">✓</span>
+            </div>
+
+            <p class="muted-text">
+                Review submitted profiles and mark them as verified for
+                matching in this browser demonstration.
+            </p>
+
+            <div id="vaAdminList" class="records-list" aria-live="polite">
+                <p class="muted-text">No volunteer profiles to review.</p>
+            </div>
+
+            <p class="small-note">
+                This panel is not protected by admin login. Its verification
+                status is a demonstration only and must not be treated as
+                proof of identity, background checks or real-world safety.
+            </p>
+
+            <h4>Recorded Reports</h4>
+            <div id="vaReportsList" class="records-list" aria-live="polite">
+                <p class="muted-text">No reports submitted.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
 
     <!-- 6. PET DEPARTMENTAL STORE -->
 
