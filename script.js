@@ -2660,14 +2660,7 @@ if (hasScheduleConflict) return false;
     });
 }
         // Match the general area entered on both profiles.
-        if (vaNormalise(volunteer.area) !== requestArea) {
-            return false;
-        }
-
-        return true;
-    });
-}
-
+       
 
 // Render all assistance requests and their matching volunteers.
 function vaRenderRequests() {
