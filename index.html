@@ -1869,6 +1869,124 @@
         </div>
     </section>
 
+    <!-- SERVICE RATINGS AND REVIEWS -->
+
+<section class="section alternate-section" id="service-reviews">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">SHARE YOUR EXPERIENCE</p>
+            <h2>Every experience<br><span>helps us improve.</span></h2>
+            <p>
+                Rate a saved service request and share feedback about
+                your PawCare experience.
+            </p>
+        </div>
+
+        <div class="service-review-layout">
+
+            <!-- SUBMIT A RATING -->
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">YOUR FEEDBACK</p>
+                        <h3>Rate a Service</h3>
+                    </div>
+                    <span class="panel-symbol">★</span>
+                </div>
+
+                <form id="serviceReviewForm" class="form-grid">
+
+                    <label class="full-width">
+                        Select Your Saved Service Request *
+                        <select id="serviceReviewBooking" required>
+                            <option value="">Select a service request</option>
+                        </select>
+                    </label>
+
+                    <label class="full-width">
+                        Your Rating *
+                        <select id="serviceReviewRating" required>
+                            <option value="">Select a rating</option>
+                            <option value="5">★★★★★ — Excellent</option>
+                            <option value="4">★★★★ — Very Good</option>
+                            <option value="3">★★★ — Good</option>
+                            <option value="2">★★ — Needs Improvement</option>
+                            <option value="1">★ — Poor</option>
+                        </select>
+                    </label>
+
+                    <label class="full-width">
+                        Your Review
+                        <textarea
+                            id="serviceReviewComment"
+                            rows="4"
+                            maxlength="500"
+                            placeholder="Share what went well or what could be improved."
+                        ></textarea>
+                    </label>
+
+                    <button
+                        type="submit"
+                        class="button primary-button full-width"
+                    >
+                        Submit Rating ★
+                    </button>
+
+                </form>
+
+                <p
+                    id="serviceReviewFormStatus"
+                    class="small-note"
+                    role="status"
+                    aria-live="polite"
+                >
+                    Select a saved service request to leave a rating.
+                </p>
+            </div>
+
+
+            <!-- DISPLAY SAVED REVIEWS -->
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="panel-label">CUSTOMER FEEDBACK</p>
+                        <h3>Service Reviews</h3>
+                    </div>
+                    <span class="panel-symbol">♡</span>
+                </div>
+
+                <div
+                    id="serviceReviewSummary"
+                    class="service-review-summary"
+                    aria-live="polite"
+                >
+                    No reviews yet.
+                </div>
+
+                <div
+                    id="serviceReviewsList"
+                    class="service-reviews-list"
+                    aria-live="polite"
+                >
+                    <p class="muted-text">
+                        Your saved service reviews will appear here.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="small-note">
+            This is a demonstration review system. Ratings are stored
+            in the current browser and are not independently verified
+            or shared with other users.
+        </p>
+
+    </div>
+</section>
 
     <section class="closing-banner">
         <div class="container closing-content">
