@@ -262,6 +262,91 @@
 
         </div>
 
+
+<!-- CARE REMINDERS -->
+
+<div class="panel care-reminders-panel">
+
+    <div class="panel-heading">
+        <div>
+            <p class="panel-label">STAY ON TRACK</p>
+            <h3>Care Reminders</h3>
+        </div>
+        <span class="panel-symbol">📅</span>
+    </div>
+
+    <p class="muted-text">
+        Record important care dates and keep track of your pet's routine.
+    </p>
+
+    <form id="careReminderForm" class="form-grid">
+
+        <label>
+            Reminder
+            <input
+                type="text"
+                id="reminderTitle"
+                maxlength="100"
+                placeholder="e.g. Vet appointment"
+                required
+            >
+        </label>
+
+        <label>
+            Pet
+            <select id="reminderPetSelect" required>
+                <option value="">General care</option>
+            </select>
+        </label>
+
+        <label>
+            Date
+            <input type="date" id="reminderDate" required>
+        </label>
+
+        <label>
+            Category
+            <select id="reminderCategory">
+                <option>Vaccination</option>
+                <option>Veterinary Visit</option>
+                <option>Grooming</option>
+                <option>Medication Reminder</option>
+                <option>Feeding</option>
+                <option>Other</option>
+            </select>
+        </label>
+
+        <label class="full-width">
+            Notes
+            <textarea
+                id="reminderNotes"
+                rows="2"
+                maxlength="500"
+                placeholder="Optional details"
+            ></textarea>
+        </label>
+
+        <button type="submit" class="button primary-button full-width">
+            Save Care Reminder +
+        </button>
+
+    </form>
+
+    <div class="reminders-summary">
+        <span id="reminderCount" class="count-badge">0 reminders</span>
+    </div>
+
+    <div
+        id="careRemindersList"
+        class="records-list"
+        aria-live="polite"
+    >
+        <p class="muted-text">No care reminders saved yet.</p>
+    </div>
+
+</div>
+
+        
         <p class="small-note">
             Dashboard information comes from this browser's saved data.
             It is not synchronised between devices.
