@@ -1533,3 +1533,276 @@ $("#clearCart").addEventListener("click", () => {
 
 // Display the dashboard when the website loads.
 renderPawCareDashboard();
+
+/* ==================================
+   SAVE NUTRITION PLANS
+================================== */
+
+const NUTRITION_STORAGE_KEY = "pawcare-saved-nutrition-plans";
+
+
+// Read the saved plans.
+function getSavedNutritionPlans() {
+    try {
+        const plans = JSON.parse(
+            localStorage.getItem(NUTRITION_STORAGE_KEY) || "[]"
+        );
+
+        return Array.isArray(plans) ? plans : [];
+    } catch (error) {
+        console.error("Could not load nutrition plans:", error);
+        return [];
+    }
+}
+
+
+// Save the plans.
+function saveNutritionPlans(plans) {
+    try {
+        localStorage.setItem(
+            NUTRITION_STORAGE_KEY,
+            JSON.stringify(plans)
+        );
+
+        return true;
+    } catch (error) {
+        showToast("Could not save nutrition plans in this browser.");
+        return false;
+    }
+}
+
+
+// Display all saved plans.
+function renderSavedNutritionPlans() {
+    const plans = getSavedNutritionPlans();
+    const container = $("#savedNutritionPlans");
+
+    $("#savedNutritionPlanCount").textContent =
+        `${plans.length} ${plans.length === 1 ? "plan" : "plans"}`;
+
+    if (plans.length === 0) {
+        container.innerHTML = `
+            <p class="muted-text">
+                No saved feeding plans yet.
+                Create a plan using the form above.
+            </p>
+        `;
+        return;
+    }
+
+    container.innerHTML = plans.slice().reverse().map(plan => {
+        const mealRows = plan.mealChecks.map((completed, index) => `
+            <div class="nutrition-plan-meal">
+                <span>Meal ${index + 1}</span>
+
+                <label>
+                    <input
+                        type="checkbox"
+                        data-plan-id="${escapeHTML(plan.id)}"
+                        data-meal-index="${index}"
+                        ${completed ? "checked" : ""}
+                    >
+                    Completed
+                </label>
+            </div>
+        `).join("");
+
+        return `
+            <article class="nutrition-plan-card">
+                <h4>${escapeHTML(plan.petName)}'s Feeding Plan</h4>
+
+                <p>
+                    <strong>Pet:</strong> ${escapeHTML(plan.petType)}<br>
+                    <strong>Food:</strong> ${escapeHTML(plan.food)}<br>
+                    <strong>Created:</strong> ${escapeHTML(formatDate(plan.date))}
+                </p>
+
+                ${mealRows}
+
+                ${
+                    plan.notes
+                        ? `<p><strong>Notes:</strong>
+                            ${escapeHTML(plan.notes)}</p>`
+                        : ""
+                }
+
+                <button
+                    type="button"
+                    class="button outline-button"
+                    data-delete-nutrition="${escapeHTML(plan.id)}"
+                >
+                    Delete Plan
+                </button>
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Whenever a nutrition plan is created, save a copy.
+$("#nutritionForm").addEventListener("submit", event => {
+    const petName = $("#nutritionPetName").value.trim();
+    const petType = $("#nutritionPetType").value;
+    const food = $("#nutritionFood").value.trim();
+    const meals = Number($("#nutritionMeals").value);
+    const notes = $("#nutritionNotes").value.trim();
+
+    if (!petName || !petType || !food) {
+        return;
+    }
+
+    const plans = getSavedNutritionPlans();
+
+    const plan = {
+        id: Date.now().toString() +
+            Math.random().toString(16).slice(2),
+
+        petName: petName,
+        petType: petType,
+        food: food,
+        meals: meals,
+        notes: notes,
+        date: getLocalDate(),
+        mealChecks: Array.from(
+            { length: meals },
+            () => false
+        )
+    };
+
+    plans.push(plan);
+
+    if (saveNutritionPlans(plans)) {
+        renderSavedNutritionPlans();
+        showToast("Feeding plan saved!");
+    }
+});
+
+
+// Save changes when a meal is marked completed.
+$("#savedNutritionPlans").addEventListener("change", event => {
+    const checkbox = event.target;
+
+    if (!checkbox.matches("[data-plan-id]")) {
+        return;
+    }
+
+    const planId = checkbox.dataset.planId;
+    const mealIndex = Number(checkbox.dataset.mealIndex);
+
+    const plans = getSavedNutritionPlans();
+
+    const plan = plans.find(item => item.id === planId);
+
+    if (!plan || !Number.isInteger(mealIndex)) {
+        return;
+    }
+
+    plan.mealChecks[mealIndex] = checkbox.checked;
+
+    saveNutritionPlans(plans);
+});
+
+
+// Delete a saved nutrition plan.
+$("#savedNutritionPlans").addEventListener("click", event => {
+    const button = event.target.closest("[data-delete-nutrition]");
+
+    if (!button) {
+        return;
+    }
+
+    const confirmed = confirm(
+        "Do you want to delete this feeding plan?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const plans = getSavedNutritionPlans().filter(
+        plan => plan.id !== button.dataset.deleteNutrition
+    );
+
+    if (saveNutritionPlans(plans)) {
+        renderSavedNutritionPlans();
+        showToast("Feeding plan deleted.");
+    }
+});
+
+
+/* ==================================
+   SAVE GROOMING CHECKLIST PROGRESS
+================================== */
+
+// Save a separate checklist for each pet selected
+// in the dashboard. If no pet is selected, use a
+// general checklist instead.
+
+function getGroomingStorageKey() {
+    const selectedPetId = localStorage.getItem(
+        "pawcare-selected-pet-id"
+    );
+
+    return selectedPetId
+        ? "pawcare-grooming-" + selectedPetId
+        : "pawcare-grooming-default";
+}
+
+
+// Save all grooming checkbox states.
+function saveGroomingChecklist() {
+    const checklist = $$(".groom-task").map(task => task.checked);
+
+    try {
+        localStorage.setItem(
+            getGroomingStorageKey(),
+            JSON.stringify(checklist)
+        );
+    } catch (error) {
+        showToast("Could not save grooming progress.");
+    }
+}
+
+
+// Restore the checklist for the selected pet.
+function loadGroomingChecklist() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(getGroomingStorageKey()) || "[]"
+        );
+
+        $$(".groom-task").forEach((task, index) => {
+            task.checked = saved[index] === true;
+        });
+
+    } catch (error) {
+        console.error("Could not load grooming checklist:", error);
+    }
+
+    updateGroomingProgress();
+}
+
+
+// Store changes when a grooming task is checked.
+$("#groomingTasks").addEventListener("change", () => {
+    saveGroomingChecklist();
+});
+
+
+// Restore the right checklist when a different
+// dashboard pet is selected.
+$("#dashboardPetSelect").addEventListener("change", () => {
+    loadGroomingChecklist();
+});
+
+
+// When the checklist is reset, save its cleared state.
+$("#resetGrooming").addEventListener("click", () => {
+    saveGroomingChecklist();
+});
+
+
+// Display saved nutrition plans and grooming progress
+// when the page loads.
+renderSavedNutritionPlans();
+loadGroomingChecklist();
