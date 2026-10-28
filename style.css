@@ -1570,3 +1570,236 @@ h1 span, h2 span {
         align-items: flex-start;
     }
 }
+/* ==================================
+   PAWCARE DASHBOARD
+================================== */
+
+.dashboard-section {
+    background: #f4f7ef;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.dashboard-stat {
+    background: white;
+    border: 1px solid #e5e9df;
+    border-radius: 18px;
+    padding: 23px;
+    box-shadow: 0 8px 24px rgba(23, 79, 59, 0.05);
+}
+
+.dashboard-stat-icon {
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    background: #e8f0e2;
+    color: var(--forest);
+    font-size: 1.35rem;
+    margin-bottom: 13px;
+}
+
+.dashboard-stat p {
+    font-size: 0.82rem;
+    margin-bottom: 7px;
+}
+
+.dashboard-stat strong {
+    display: block;
+    color: var(--forest);
+    font-family: "Manrope", sans-serif;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 24px;
+}
+
+.dashboard-select-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #52675a;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+#dashboardPetSelect {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #dde5db;
+    border-radius: 11px;
+    background: #fbfcf8;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.85rem;
+}
+
+#dashboardPetSelect:focus {
+    outline: 2px solid #a8c991;
+    border-color: #7da671;
+}
+
+.dashboard-selected-pet {
+    margin-top: 18px;
+    padding: 17px;
+    background: #f5f8f1;
+    border: 1px solid #e5e9df;
+    border-radius: 15px;
+    min-height: 120px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-pet-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 13px;
+}
+
+.dashboard-pet-emoji {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    background: white;
+    font-size: 2rem;
+}
+
+.dashboard-pet-heading h4 {
+    margin: 0 0 5px;
+    font-size: 1.15rem;
+}
+
+.dashboard-pet-heading p {
+    margin: 0;
+    font-size: 0.78rem;
+}
+
+.dashboard-pet-details {
+    font-size: 0.8rem;
+    line-height: 1.8;
+}
+
+.dashboard-pet-details p {
+    margin-bottom: 5px;
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 17px;
+}
+
+.dashboard-actions .button {
+    font-size: 0.78rem;
+}
+
+.dashboard-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.dashboard-quick-links {
+    display: grid;
+    gap: 8px;
+}
+
+.dashboard-quick-link {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 11px;
+    padding: 12px;
+    border: 1px solid #edf0e9;
+    border-radius: 13px;
+    background: #fbfcf8;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.dashboard-quick-link:hover {
+    background: #edf4e8;
+    transform: translateX(3px);
+}
+
+.dashboard-quick-link > span:first-child {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: #e8f0e2;
+    font-size: 1.1rem;
+}
+
+.dashboard-quick-link > span:nth-child(2) {
+    min-width: 0;
+}
+
+.dashboard-quick-link strong,
+.dashboard-quick-link small {
+    display: block;
+}
+
+.dashboard-quick-link strong {
+    font-size: 0.82rem;
+    color: var(--ink);
+}
+
+.dashboard-quick-link small {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.dashboard-quick-link > span:last-child {
+    color: var(--forest);
+    font-weight: 800;
+}
+
+@media (max-width: 850px) {
+    .dashboard-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .dashboard-stat {
+        padding: 18px;
+    }
+
+    .dashboard-stat-icon {
+        margin-bottom: 9px;
+    }
+
+    .dashboard-stat strong {
+        font-size: 1.7rem;
+    }
+
+    .dashboard-actions {
+        flex-direction: column;
+    }
+
+    .dashboard-actions .button {
+        width: 100%;
+    }
+}
