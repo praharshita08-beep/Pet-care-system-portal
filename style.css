@@ -1917,3 +1917,28 @@ h1 span, h2 span {
     margin: 6px 6px 0 0;
     font-size: 0.74rem;
 }
+
+/* PRODUCT SORTING DROPDOWN */
+
+.store-toolbar select {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 12px;
+    border: 1px solid #dde5db;
+    border-radius: 11px;
+    background: #fbfcf8;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.82rem;
+}
+
+.store-toolbar select:focus {
+    outline: 2px solid #a8c991;
+    border-color: #7da671;
+}
+
+@media (max-width: 850px) {
+    .store-toolbar select {
+        width: 100%;
+    }
+}
