@@ -2595,31 +2595,57 @@ function vaUpdatePetOptions() {
 
 
 // Find volunteers whose saved details match a request.
+// Match volunteers by service, pet type, area,
+// available day, available hours and verification status.
 function vaFindMatches(request) {
     const volunteers = vaGetVolunteers();
     const blocked = vaGetBlockedIds();
 
     const requestArea = vaNormalise(request.area);
+
     const requestWeekday = new Date(
         request.date + "T12:00:00"
     ).getDay();
 
     return volunteers.filter(volunteer => {
+        // Only verified, unblocked volunteers can match.
         if (!volunteer.verified) return false;
         if (blocked.includes(volunteer.id)) return false;
 
+        // Match the requested service.
         if (!volunteer.services.includes(request.service)) {
             return false;
         }
 
+        // Match the pet's species.
         if (!volunteer.petTypes.includes(request.petType)) {
             return false;
         }
 
+        // Match the available weekday.
         if (!volunteer.availableDays.includes(requestWeekday)) {
             return false;
         }
 
+        // Match the general area.
+        if (vaNormalise(volunteer.area) !== requestArea) {
+            return false;
+        }
+
+        // Match the requested time against available hours.
+        // Older demo profiles without saved hours remain compatible.
+        if (volunteer.availableFrom && volunteer.availableTo) {
+            if (
+                request.time < volunteer.availableFrom ||
+                request.time > volunteer.availableTo
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    });
+}
         // Match the general area entered on both profiles.
         if (vaNormalise(volunteer.area) !== requestArea) {
             return false;
