@@ -1803,3 +1803,57 @@ h1 span, h2 span {
         width: 100%;
     }
 }
+
+/* SAVED NUTRITION PLANS */
+
+.saved-plans-section {
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+.nutrition-plan-card {
+    background: #f7f9f4;
+    border: 1px solid #e5e9df;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.nutrition-plan-card h4 {
+    margin-bottom: 6px;
+    font-size: 1rem;
+}
+
+.nutrition-plan-card p {
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+    margin-bottom: 8px;
+}
+
+.nutrition-plan-meal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-top: 1px solid #e1e8dc;
+    font-size: 0.8rem;
+}
+
+.nutrition-plan-meal label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.nutrition-plan-meal input {
+    accent-color: var(--forest);
+}
+
+.nutrition-plan-card .button {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    padding: 9px 13px;
+}
