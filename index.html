@@ -984,6 +984,88 @@
     </section>
 
 
+    <!-- PET CARE TIPS LIBRARY -->
+
+<section class="section alternate-section" id="tips">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">KNOWLEDGE FOR CARING PET OWNERS</p>
+            <h2>Small tips.<br><span>Better everyday care.</span></h2>
+            <p>
+                Browse useful pet-care information. Search by topic
+                or filter tips by category.
+            </p>
+        </div>
+
+        <div class="panel tips-library-panel">
+
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-label">PET CARE KNOWLEDGE</p>
+                    <h3>Tips Library</h3>
+                </div>
+                <span class="panel-symbol">📚</span>
+            </div>
+
+            <div class="tips-toolbar">
+
+                <label>
+                    Search tips
+                    <input
+                        type="search"
+                        id="tipSearch"
+                        placeholder="e.g. grooming, food, health"
+                        aria-label="Search pet care tips"
+                    >
+                </label>
+
+                <label>
+                    Category
+                    <select id="tipCategory">
+                        <option value="All">All Categories</option>
+                        <option value="Daily Care">Daily Care</option>
+                        <option value="Health">Health</option>
+                        <option value="Grooming">Grooming</option>
+                        <option value="Training">Training</option>
+                        <option value="Adoption">Adoption</option>
+                        <option value="Safety">Safety</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Exercise">Exercise</option>
+                    </select>
+                </label>
+
+                <label>
+                    Pet Type
+                    <select id="tipPetType" class="pet-type">
+                    </select>
+                </label>
+
+            </div>
+
+            <div class="tips-library-status"
+                 id="tipsStatus"
+                 role="status"
+                 aria-live="polite">
+                Loading pet-care tips...
+            </div>
+
+            <div
+                id="tipsList"
+                class="tips-grid"
+                aria-live="polite"
+            ></div>
+
+            <p class="small-note">
+                These tips are general educational information, not
+                veterinary advice. Individual pets may have different needs.
+            </p>
+
+        </div>
+    </div>
+</section>
+    
+
     <!-- 5. ADOPTION AND RESCUE CENTRE -->
 
     <section class="section adoption-section" id="adoption">
