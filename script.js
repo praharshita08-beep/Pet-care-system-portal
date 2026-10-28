@@ -706,9 +706,15 @@ function rupees(amount) {
 }
 
 function getFilteredProducts() {
-    const query = $("#productSearch").value.trim().toLowerCase();
+    const query = $("#productSearch")
+        .value
+        .trim()
+        .toLowerCase();
 
-    return products.filter(product => {
+    const sortBy = $("#productSort").value;
+
+    // Filter products by category and search text.
+    const filtered = products.filter(product => {
         const categoryMatches =
             currentCategory === "All" ||
             product.category === currentCategory;
@@ -720,8 +726,24 @@ function getFilteredProducts() {
 
         return categoryMatches && searchMatches;
     });
-}
 
+    // Sort the filtered products.
+    if (sortBy === "name-asc") {
+        filtered.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+    } else if (sortBy === "price-asc") {
+        filtered.sort((a, b) =>
+            a.price - b.price
+        );
+    } else if (sortBy === "price-desc") {
+        filtered.sort((a, b) =>
+            b.price - a.price
+        );
+    }
+
+    return filtered;
+}
 function renderProducts() {
     const grid = $("#productGrid");
     const filtered = getFilteredProducts();
