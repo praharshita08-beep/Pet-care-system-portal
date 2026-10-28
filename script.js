@@ -1280,3 +1280,256 @@ $("#profilePetBirthDate").max = getLocalDate();
 
 // Show profiles already stored in this browser.
 renderPetProfiles();
+
+
+/* ==================================
+   PAWCARE DASHBOARD FUNCTIONALITY
+================================== */
+
+const DASHBOARD_PET_KEY = "pawcare-selected-pet-id";
+
+
+// Find the currently selected pet.
+function getDashboardSelectedPet() {
+    const pets = getPetProfiles();
+    const selectedId = localStorage.getItem(DASHBOARD_PET_KEY);
+
+    return pets.find(pet => pet.id === selectedId) || null;
+}
+
+
+// Update dashboard counts and the selected pet card.
+function renderPawCareDashboard() {
+    const pets = getPetProfiles();
+    const records = getHealthRecords();
+
+    const petSelect = $("#dashboardPetSelect");
+    const petInfo = $("#dashboardSelectedPetInfo");
+
+    const previousId = localStorage.getItem(DASHBOARD_PET_KEY);
+
+    // Update summary counts.
+    $("#dashboardPetCount").textContent = pets.length;
+    $("#dashboardHealthCount").textContent = records.length;
+
+    $("#dashboardCartCount").textContent =
+        $("#cartCount").textContent;
+
+    // Remember the selected pet if it still exists.
+    let selectedId = pets.some(pet => pet.id === previousId)
+        ? previousId
+        : (pets.length ? pets[0].id : "");
+
+    if (selectedId) {
+        localStorage.setItem(DASHBOARD_PET_KEY, selectedId);
+    } else {
+        localStorage.removeItem(DASHBOARD_PET_KEY);
+    }
+
+    // Fill the dropdown with saved pet profiles.
+    petSelect.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+
+    placeholder.value = "";
+    placeholder.textContent = pets.length
+        ? "Choose a pet"
+        : "No pets added yet";
+
+    petSelect.appendChild(placeholder);
+
+    pets.forEach(pet => {
+        const option = document.createElement("option");
+
+        option.value = pet.id;
+        option.textContent = pet.name + " (" + pet.type + ")";
+
+        petSelect.appendChild(option);
+    });
+
+    petSelect.value = selectedId;
+
+    const selectedPet = pets.find(pet => pet.id === selectedId);
+
+    // Show the selected pet's details.
+    if (!selectedPet) {
+        petInfo.innerHTML = `
+            <p class="muted-text">
+                No pet profiles found yet.
+                Visit My Pets to add your first pet.
+            </p>
+        `;
+
+        $("#dashboardUsePet").disabled = true;
+        $("#dashboardEditPet").disabled = true;
+
+        return;
+    }
+
+    const emoji = petTypeEmojis[selectedPet.type] || "🐾";
+
+    petInfo.innerHTML = `
+        <div class="dashboard-pet-heading">
+            <div class="dashboard-pet-emoji">
+                ${emoji}
+            </div>
+
+            <div>
+                <h4>${escapeHTML(selectedPet.name)}</h4>
+                <p>${escapeHTML(selectedPet.type)}</p>
+            </div>
+        </div>
+
+        <div class="dashboard-pet-details">
+            <p>
+                <strong>Breed:</strong>
+                ${escapeHTML(selectedPet.breed || "Not specified")}
+            </p>
+
+            <p>
+                <strong>Date of Birth:</strong>
+                ${escapeHTML(
+                    selectedPet.birthDate
+                        ? formatDate(selectedPet.birthDate)
+                        : "Not specified"
+                )}
+            </p>
+
+            ${
+                selectedPet.notes
+                    ? `<p><strong>Notes:</strong>
+                        ${escapeHTML(selectedPet.notes)}</p>`
+                    : ""
+            }
+        </div>
+    `;
+
+    $("#dashboardUsePet").disabled = false;
+    $("#dashboardEditPet").disabled = false;
+}
+
+
+// Change the selected pet.
+$("#dashboardPetSelect").addEventListener("change", event => {
+    const selectedId = event.target.value;
+
+    if (selectedId) {
+        localStorage.setItem(DASHBOARD_PET_KEY, selectedId);
+    } else {
+        localStorage.removeItem(DASHBOARD_PET_KEY);
+    }
+
+    renderPawCareDashboard();
+});
+
+
+// Fill the existing care forms with the selected pet's information.
+function fillDashboardPetForms(pet) {
+    const fields = {
+        healthPetName: pet.name,
+        healthPetType: pet.type,
+
+        nutritionPetName: pet.name,
+        nutritionPetType: pet.type,
+
+        trainingPetName: pet.name,
+        trainingPetType: pet.type,
+
+        bookingPetName: pet.name,
+        bookingPetType: pet.type
+    };
+
+    Object.entries(fields).forEach(([fieldId, value]) => {
+        const field = document.getElementById(fieldId);
+
+        if (field) {
+            field.value = value;
+        }
+    });
+}
+
+
+// Use the selected pet in the care forms.
+$("#dashboardUsePet").addEventListener("click", () => {
+    const pet = getDashboardSelectedPet();
+
+    if (!pet) {
+        showToast("Please add and select a pet first.");
+        return;
+    }
+
+    fillDashboardPetForms(pet);
+
+    showToast(
+        pet.name + "'s details added to the care forms."
+    );
+});
+
+
+// Open the saved pet profile for editing.
+$("#dashboardEditPet").addEventListener("click", () => {
+    const pet = getDashboardSelectedPet();
+
+    if (!pet) {
+        showToast("Please select a pet first.");
+        return;
+    }
+
+    $("#petProfileId").value = pet.id;
+    $("#profilePetName").value = pet.name;
+    $("#profilePetType").value = pet.type;
+    $("#profilePetBreed").value = pet.breed || "";
+    $("#profilePetBirthDate").value = pet.birthDate || "";
+    $("#profilePetNotes").value = pet.notes || "";
+
+    $("#petFormTitle").textContent = "Edit Pet Profile";
+    $("#savePetButton").textContent = "Save Changes ✓";
+    $("#cancelPetEdit").hidden = false;
+
+    $("#pets").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+});
+
+
+// Refresh the dashboard after pet profile changes.
+$("#petProfileForm").addEventListener("submit", () => {
+    renderPawCareDashboard();
+});
+
+$("#petProfilesList").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+
+// Refresh after health records are added, deleted or cleared.
+$("#healthForm").addEventListener("submit", () => {
+    renderPawCareDashboard();
+});
+
+$("#healthRecordsList").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+$("#clearHealthRecords").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+
+// Refresh the item count when the shopping bag changes.
+$("#productGrid").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+$("#cartItems").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+$("#clearCart").addEventListener("click", () => {
+    renderPawCareDashboard();
+});
+
+
+// Display the dashboard when the website loads.
+renderPawCareDashboard();
