@@ -2839,6 +2839,13 @@ function vaRenderVolunteers() {
                 </p>
 
                 <p>
+    <strong>Available hours:</strong>
+    ${escapeHTML(volunteer.availableFrom || "Not specified")}
+    –
+    ${escapeHTML(volunteer.availableTo || "Not specified")}
+</p>
+
+                <p>
                     <strong>Pet types:</strong>
                     ${escapeHTML(volunteer.petTypes.join(", "))}
                 </p>
