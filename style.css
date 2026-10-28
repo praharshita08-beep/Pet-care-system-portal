@@ -2716,3 +2716,15 @@ h1 span, h2 span {
         grid-template-columns: 1fr;
     }
 }
+
+/* RATINGS ON SERVICE CARDS */
+
+.service-rating-summary {
+    margin: 8px 0 14px !important;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.65);
+    color: #775c18 !important;
+    font-size: 0.75rem !important;
+    font-weight: 800;
+}
