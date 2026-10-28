@@ -4112,3 +4112,247 @@ setupPawCareDraft(
         $("#vaRequestPet").value === "" &&
         $("#vaRequestDetails").value === ""
 );
+
+/* ==================================
+   SERVICE RATINGS AND REVIEWS
+================================== */
+
+const SERVICE_REVIEWS_KEY = "pawcare-service-reviews";
+
+
+// Read reviews saved in this browser.
+function getServiceReviews() {
+    try {
+        const reviews = JSON.parse(
+            localStorage.getItem(SERVICE_REVIEWS_KEY) || "[]"
+        );
+
+        return Array.isArray(reviews) ? reviews : [];
+
+    } catch (error) {
+        console.error("Could not load service reviews:", error);
+        return [];
+    }
+}
+
+
+// Save reviews in this browser.
+function saveServiceReviews(reviews) {
+    try {
+        localStorage.setItem(
+            SERVICE_REVIEWS_KEY,
+            JSON.stringify(reviews)
+        );
+
+        return true;
+
+    } catch (error) {
+        console.error("Could not save service reviews:", error);
+        showToast("Could not save your review.");
+        return false;
+    }
+}
+
+
+// Populate the dropdown using saved service requests.
+function renderServiceReviewBookingOptions() {
+    const select = $("#serviceReviewBooking");
+    const status = $("#serviceReviewFormStatus");
+
+    const requests = getSavedBookingRequests();
+    const reviews = getServiceReviews();
+
+    const reviewedRequestIds = reviews.map(
+        review => review.requestId
+    );
+
+    const availableRequests = requests.filter(
+        request => !reviewedRequestIds.includes(request.id)
+    );
+
+    select.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = availableRequests.length
+        ? "Select a service request"
+        : "No unrated service requests";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+
+    select.appendChild(placeholder);
+
+    availableRequests.forEach(request => {
+        const option = document.createElement("option");
+
+        option.value = request.id;
+
+        option.textContent =
+            request.service + " — " +
+            request.petName +
+            (request.date
+                ? " (" + formatDate(request.date) + ")"
+                : "");
+
+        select.appendChild(option);
+    });
+
+    if (availableRequests.length === 0) {
+        status.textContent = requests.length === 0
+            ? "Submit a service request first to rate a service."
+            : "All currently saved service requests have been rated.";
+    } else {
+        status.textContent =
+            "You can submit one rating for each saved service request.";
+    }
+}
+
+
+// Display the average rating and saved reviews.
+function renderServiceReviews() {
+    const container = $("#serviceReviewsList");
+    const summary = $("#serviceReviewSummary");
+
+    const reviews = getServiceReviews();
+
+    if (reviews.length === 0) {
+        summary.textContent = "No ratings yet.";
+
+        container.innerHTML = `
+            <p class="muted-text">
+                Once you rate a saved service request,
+                your review will appear here.
+            </p>
+        `;
+
+        return;
+    }
+
+    const totalStars = reviews.reduce(
+        (total, review) => total + Number(review.rating),
+        0
+    );
+
+    const average = (totalStars / reviews.length).toFixed(1);
+
+    summary.textContent =
+        "Average rating: " + average + " / 5 · " +
+        reviews.length +
+        (reviews.length === 1 ? " review" : " reviews");
+
+    // Show the newest reviews first.
+    container.innerHTML = reviews.slice().reverse().map(review => {
+        const rating = Number(review.rating);
+
+        const stars =
+            "★".repeat(rating) +
+            "☆".repeat(5 - rating);
+
+        return `
+            <article class="service-review-card">
+
+                <span class="service-review-stars"
+                      aria-label="${rating} out of 5 stars">
+                    ${stars}
+                </span>
+
+                <h4>${escapeHTML(review.service)}</h4>
+
+                <p>
+                    <strong>Pet:</strong>
+                    ${escapeHTML(review.petName)}
+                </p>
+
+                ${
+                    review.comment
+                        ? `<p>${escapeHTML(review.comment)}</p>`
+                        : `<p class="muted-text">No written comment.</p>`
+                }
+
+                <p class="service-review-meta">
+                    Rated on ${escapeHTML(formatDate(review.reviewDate))}
+                </p>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Submit a rating for a saved service request.
+$("#serviceReviewForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const requestId = $("#serviceReviewBooking").value;
+    const rating = Number($("#serviceReviewRating").value);
+    const comment = $("#serviceReviewComment").value.trim();
+
+    const requests = getSavedBookingRequests();
+
+    const request = requests.find(
+        item => item.id === requestId
+    );
+
+    if (!request) {
+        showToast("Please select a saved service request.");
+        return;
+    }
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        showToast("Please select a rating from 1 to 5.");
+        return;
+    }
+
+    const reviews = getServiceReviews();
+
+    // Prevent duplicate ratings for the same request.
+    const alreadyRated = reviews.some(
+        review => review.requestId === request.id
+    );
+
+    if (alreadyRated) {
+        showToast("This request has already been rated.");
+        renderServiceReviewBookingOptions();
+        return;
+    }
+
+    const review = {
+        id: Date.now().toString() +
+            Math.random().toString(16).slice(2),
+
+        requestId: request.id,
+        service: request.service,
+        petName: request.petName,
+        rating: rating,
+        comment: comment,
+        reviewDate: getLocalDate()
+    };
+
+    reviews.push(review);
+
+    if (saveServiceReviews(reviews)) {
+        $("#serviceReviewForm").reset();
+
+        renderServiceReviewBookingOptions();
+        renderServiceReviews();
+
+        showToast("Your service rating has been saved.");
+    }
+});
+
+
+// Refresh available ratings after a new booking is saved.
+$("#bookingForm").addEventListener("submit", () => {
+    renderServiceReviewBookingOptions();
+});
+
+
+// Refresh if a saved request is removed.
+$("#savedRequestsList").addEventListener("click", () => {
+    renderServiceReviewBookingOptions();
+});
+
+
+// Display saved reviews whenever the page loads.
+renderServiceReviewBookingOptions();
+renderServiceReviews();
