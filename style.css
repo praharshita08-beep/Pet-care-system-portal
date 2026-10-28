@@ -1942,3 +1942,39 @@ h1 span, h2 span {
         width: 100%;
     }
 }
+
+/* ==================================
+   DASHBOARD UPCOMING CARE
+================================== */
+
+.upcoming-reminders-panel {
+    margin-top: 24px;
+}
+
+.upcoming-reminders-panel .records-heading {
+    margin-bottom: 12px;
+}
+
+.dashboard-reminder-item {
+    padding: 15px;
+    border: 1px solid #e5e9df;
+    border-radius: 13px;
+    background: #f7f9f4;
+}
+
+.dashboard-reminder-item h4 {
+    font-size: 0.95rem;
+    margin: 9px 0 7px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-reminder-item p {
+    font-size: 0.78rem;
+    line-height: 1.65;
+    margin-bottom: 5px;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-reminder-item .reminder-status {
+    margin-bottom: 4px;
+}
