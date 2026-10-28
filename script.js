@@ -1801,3 +1801,313 @@ $("#resetGrooming").addEventListener("click", () => {
 // when the page loads.
 renderSavedNutritionPlans();
 loadGroomingChecklist();
+
+/* ==================================
+   CARE REMINDERS
+================================== */
+
+const CARE_REMINDERS_KEY = "pawcare-care-reminders";
+
+
+// Load reminders saved in this browser.
+function getCareReminders() {
+    try {
+        const reminders = JSON.parse(
+            localStorage.getItem(CARE_REMINDERS_KEY) || "[]"
+        );
+
+        return Array.isArray(reminders) ? reminders : [];
+
+    } catch (error) {
+        console.error("Could not load care reminders:", error);
+        return [];
+    }
+}
+
+
+// Save reminders in this browser.
+function saveCareReminders(reminders) {
+    try {
+        localStorage.setItem(
+            CARE_REMINDERS_KEY,
+            JSON.stringify(reminders)
+        );
+
+        return true;
+
+    } catch (error) {
+        showToast("Could not save reminders in this browser.");
+        return false;
+    }
+}
+
+
+// Fill the pet dropdown using saved pet profiles.
+function updateReminderPetOptions() {
+    const select = $("#reminderPetSelect");
+    const pets = getPetProfiles();
+    const previousValue = select.value;
+
+    select.innerHTML = `
+        <option value="general">General care</option>
+    `;
+
+    pets.forEach(pet => {
+        const option = document.createElement("option");
+
+        option.value = pet.id;
+        option.textContent = pet.name + " (" + pet.type + ")";
+
+        select.appendChild(option);
+    });
+
+    const valueStillExists = [...select.options].some(
+        option => option.value === previousValue
+    );
+
+    select.value = valueStillExists
+        ? previousValue
+        : "general";
+}
+
+
+// Work out a reminder's current status.
+function getReminderStatus(reminder) {
+    if (reminder.completed) {
+        return {
+            text: "Completed",
+            className: "completed"
+        };
+    }
+
+    if (reminder.date < getLocalDate()) {
+        return {
+            text: "Overdue",
+            className: "overdue"
+        };
+    }
+
+    if (reminder.date === getLocalDate()) {
+        return {
+            text: "Due Today",
+            className: ""
+        };
+    }
+
+    return {
+        text: "Upcoming",
+        className: ""
+    };
+}
+
+
+// Display the saved reminders.
+function renderCareReminders() {
+    const reminders = getCareReminders();
+    const container = $("#careRemindersList");
+
+    $("#reminderCount").textContent =
+        `${reminders.length} ${
+            reminders.length === 1 ? "reminder" : "reminders"
+        }`;
+
+    if (reminders.length === 0) {
+        container.innerHTML = `
+            <p class="muted-text">
+                No care reminders saved yet.
+                Use the form above to add one.
+            </p>
+        `;
+
+        return;
+    }
+
+    // Sort incomplete reminders by date; completed reminders
+    // appear after incomplete reminders.
+    const sortedReminders = reminders.slice().sort((a, b) => {
+        if (a.completed !== b.completed) {
+            return a.completed ? 1 : -1;
+        }
+
+        return a.date.localeCompare(b.date);
+    });
+
+    container.innerHTML = sortedReminders.map(reminder => {
+        const status = getReminderStatus(reminder);
+
+        return `
+            <article class="reminder-card">
+
+                <span class="reminder-status ${status.className}">
+                    ${status.text}
+                </span>
+
+                <h4>${escapeHTML(reminder.title)}</h4>
+
+                <p>
+                    <strong>Category:</strong>
+                    ${escapeHTML(reminder.category)}
+                </p>
+
+                <p>
+                    <strong>Pet:</strong>
+                    ${escapeHTML(reminder.petName)}
+                </p>
+
+                <p>
+                    <strong>Date:</strong>
+                    ${escapeHTML(formatDate(reminder.date))}
+                </p>
+
+                ${
+                    reminder.notes
+                        ? `<p><strong>Notes:</strong>
+                            ${escapeHTML(reminder.notes)}</p>`
+                        : ""
+                }
+
+                <button
+                    type="button"
+                    class="button outline-button"
+                    data-toggle-reminder="${escapeHTML(reminder.id)}"
+                >
+                    ${reminder.completed ? "Reopen" : "Mark Complete"}
+                </button>
+
+                <button
+                    type="button"
+                    class="button outline-button"
+                    data-delete-reminder="${escapeHTML(reminder.id)}"
+                >
+                    Delete
+                </button>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Create a reminder.
+$("#careReminderForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = $("#reminderTitle").value.trim();
+    const date = $("#reminderDate").value;
+    const category = $("#reminderCategory").value;
+    const notes = $("#reminderNotes").value.trim();
+    const petId = $("#reminderPetSelect").value;
+
+    if (!title || !date || !petId) {
+        showToast("Please complete the required reminder fields.");
+        return;
+    }
+
+    const pets = getPetProfiles();
+    const pet = petId === "general"
+        ? null
+        : pets.find(item => item.id === petId);
+
+    if (petId !== "general" && !pet) {
+        showToast("Please select an existing pet profile.");
+        updateReminderPetOptions();
+        return;
+    }
+
+    const reminder = {
+        id: Date.now().toString() +
+            Math.random().toString(16).slice(2),
+
+        title: title,
+        date: date,
+        category: category,
+        notes: notes,
+        petId: pet ? pet.id : "",
+        petName: pet ? pet.name : "General care",
+        completed: false
+    };
+
+    const reminders = getCareReminders();
+    reminders.push(reminder);
+
+    if (saveCareReminders(reminders)) {
+        renderCareReminders();
+
+        $("#careReminderForm").reset();
+        updateReminderPetOptions();
+
+        showToast("Care reminder saved.");
+    }
+});
+
+
+// Mark a reminder complete or reopen it.
+$("#careRemindersList").addEventListener("click", event => {
+    const toggleButton = event.target.closest(
+        "[data-toggle-reminder]"
+    );
+
+    const deleteButton = event.target.closest(
+        "[data-delete-reminder]"
+    );
+
+    if (toggleButton) {
+        const reminders = getCareReminders();
+
+        const reminder = reminders.find(
+            item => item.id === toggleButton.dataset.toggleReminder
+        );
+
+        if (!reminder) return;
+
+        reminder.completed = !reminder.completed;
+
+        if (saveCareReminders(reminders)) {
+            renderCareReminders();
+
+            showToast(
+                reminder.completed
+                    ? "Reminder marked complete."
+                    : "Reminder reopened."
+            );
+        }
+
+        return;
+    }
+
+    if (deleteButton) {
+        const confirmed = confirm(
+            "Are you sure you want to delete this reminder?"
+        );
+
+        if (!confirmed) return;
+
+        const reminders = getCareReminders().filter(
+            item => item.id !== deleteButton.dataset.deleteReminder
+        );
+
+        if (saveCareReminders(reminders)) {
+            renderCareReminders();
+            showToast("Reminder deleted.");
+        }
+    }
+});
+
+
+// Keep the pet dropdown up to date when profiles change.
+$("#petProfileForm").addEventListener("submit", () => {
+    updateReminderPetOptions();
+});
+
+$("#petProfilesList").addEventListener("click", () => {
+    updateReminderPetOptions();
+});
+
+
+// Initialise the reminder feature when the page loads.
+updateReminderPetOptions();
+renderCareReminders();
+
+
+// Today's date can be selected or a future date.
+$("#reminderDate").min = getLocalDate();
