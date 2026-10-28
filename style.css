@@ -1857,3 +1857,63 @@ h1 span, h2 span {
     font-size: 0.75rem;
     padding: 9px 13px;
 }
+
+
+/* ==================================
+   CARE REMINDERS
+================================== */
+
+.care-reminders-panel {
+    margin-top: 28px;
+}
+
+.reminders-summary {
+    margin: 20px 0 12px;
+}
+
+.reminder-card {
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid #e5e9df;
+    border-radius: 14px;
+    background: #f7f9f4;
+}
+
+.reminder-card h4 {
+    margin: 9px 0 7px;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.reminder-card p {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    margin-bottom: 6px;
+    overflow-wrap: anywhere;
+}
+
+.reminder-status {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    background: #e8f0e2;
+    color: #245d40;
+}
+
+.reminder-status.overdue {
+    background: #f9e2d3;
+    color: #8a392d;
+}
+
+.reminder-status.completed {
+    background: #e6e8e3;
+    color: #56645a;
+}
+
+.reminder-card .button {
+    padding: 9px 13px;
+    margin: 6px 6px 0 0;
+    font-size: 0.74rem;
+}
