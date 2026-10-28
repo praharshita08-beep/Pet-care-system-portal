@@ -2463,3 +2463,108 @@ h1 span, h2 span {
         width: 100%;
     }
 }
+
+/* ==================================
+   CLEAN NAVIGATION DROPDOWNS
+================================== */
+
+.nav-dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.nav-dropdown > summary {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    list-style: none;
+    cursor: pointer;
+    color: #53675a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+
+.nav-dropdown > summary::-webkit-details-marker {
+    display: none;
+}
+
+.nav-dropdown > summary:hover,
+.nav-dropdown[open] > summary {
+    color: var(--green);
+}
+
+.nav-dropdown > summary span {
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+
+.nav-dropdown[open] > summary span {
+    transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -12px;
+    z-index: 200;
+    min-width: 215px;
+    padding: 8px;
+    background: #fffdf8;
+    border: 1px solid #e5e9df;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(23, 79, 59, 0.12);
+}
+
+.nav-dropdown[open] > .nav-dropdown-menu {
+    display: grid;
+}
+
+.nav-dropdown-menu a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #53675a;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.nav-dropdown-menu a:hover {
+    background: #edf4e8;
+    color: var(--forest);
+}
+
+
+/* MOBILE NAVIGATION DROPDOWNS */
+
+@media (max-width: 850px) {
+
+    nav .nav-dropdown {
+        width: 100%;
+    }
+
+    nav .nav-dropdown > summary {
+        padding: 11px 8px;
+        font-size: 0.87rem;
+        justify-content: space-between;
+    }
+
+    nav .nav-dropdown-menu {
+        position: static;
+        min-width: 0;
+        width: 100%;
+        padding: 4px 0 8px 14px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    nav .nav-dropdown-menu a {
+        padding: 9px 10px;
+        font-size: 0.82rem;
+        white-space: normal;
+    }
+}
