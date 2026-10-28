@@ -2180,3 +2180,137 @@ h1 span, h2 span {
         padding: 16px;
     }
 }
+
+/* ==================================
+   PET CARE TIPS LIBRARY
+================================== */
+
+.tips-library-panel {
+    padding: 28px;
+}
+
+.tips-toolbar {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.tips-toolbar label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #52675a;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.tips-toolbar input,
+.tips-toolbar select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #dde5db;
+    border-radius: 11px;
+    background: #fbfcf8;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.82rem;
+}
+
+.tips-toolbar input:focus,
+.tips-toolbar select:focus {
+    outline: 2px solid #a8c991;
+    border-color: #7da671;
+}
+
+.tips-library-status {
+    margin: 12px 0 18px;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.tip-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 19px;
+    background: #fff;
+    border: 1px solid #e5e9df;
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tip-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.tip-category {
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 30px;
+    background: #e8f0e2;
+    color: #245d40;
+    font-size: 0.67rem;
+    font-weight: 800;
+}
+
+.tip-card h4 {
+    margin: 14px 0 9px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.tip-card p {
+    margin-bottom: 12px;
+    font-size: 0.81rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+.tip-pet-types {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.7rem;
+}
+
+@media (max-width: 850px) {
+    .tips-toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .tips-toolbar label:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .tips-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .tips-library-panel {
+        padding: 18px;
+    }
+
+    .tips-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .tips-toolbar label:first-child {
+        grid-column: auto;
+    }
+
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
