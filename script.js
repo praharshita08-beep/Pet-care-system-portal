@@ -2254,3 +2254,83 @@ function addFriendlyFormValidation(formId) {
     "bookingForm",
     "careReminderForm"
 ].forEach(addFriendlyFormValidation);
+
+
+/* ==================================
+   DASHBOARD UPCOMING CARE SUMMARY
+================================== */
+
+function renderDashboardUpcomingReminders() {
+    const container = $("#dashboardUpcomingReminders");
+    const count = $("#dashboardPendingReminderCount");
+
+    if (!container || !count) {
+        return;
+    }
+
+    // Get reminders that haven't been completed.
+    const pendingReminders = getCareReminders()
+        .filter(reminder => !reminder.completed)
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+    count.textContent =
+        `${pendingReminders.length} pending`;
+
+    if (pendingReminders.length === 0) {
+        container.innerHTML = `
+            <p class="muted-text">
+                No pending reminders. Add one in Care Reminders below.
+            </p>
+        `;
+
+        return;
+    }
+
+    // Show the three nearest incomplete reminders.
+    container.innerHTML = pendingReminders.slice(0, 3).map(reminder => {
+        const status = getReminderStatus(reminder);
+
+        return `
+            <article class="dashboard-reminder-item">
+
+                <span class="reminder-status ${status.className}">
+                    ${escapeHTML(status.text)}
+                </span>
+
+                <h4>${escapeHTML(reminder.title)}</h4>
+
+                <p>
+                    <strong>Pet:</strong>
+                    ${escapeHTML(reminder.petName)}
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    ${escapeHTML(reminder.category)}
+                </p>
+
+                <p>
+                    <strong>Date:</strong>
+                    ${escapeHTML(formatDate(reminder.date))}
+                </p>
+
+            </article>
+        `;
+    }).join("");
+}
+
+
+// Refresh the Dashboard after a reminder is saved.
+$("#careReminderForm").addEventListener("submit", () => {
+    renderDashboardUpcomingReminders();
+});
+
+
+// Refresh after a reminder is completed, reopened or deleted.
+$("#careRemindersList").addEventListener("click", () => {
+    renderDashboardUpcomingReminders();
+});
+
+
+// Display the current reminder summary on page load.
+renderDashboardUpcomingReminders();
