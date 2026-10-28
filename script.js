@@ -2366,3 +2366,72 @@ $("#savedNutritionPlans").addEventListener("click", () => {
 
 // Display the saved count when the website loads.
 updateDashboardNutritionCount();
+
+/* ==================================
+   DASHBOARD GROOMING PROGRESS
+================================== */
+
+function updateDashboardGroomingCount() {
+    const countElement = $("#dashboardGroomingCount");
+
+    if (!countElement) {
+        return;
+    }
+
+    // Find which pet is currently selected.
+    const selectedPetId = localStorage.getItem(
+        "pawcare-selected-pet-id"
+    );
+
+    const storageKey = selectedPetId
+        ? "pawcare-grooming-" + selectedPetId
+        : "pawcare-grooming-default";
+
+    const totalTasks = $$(".groom-task").length;
+
+    try {
+        const savedTasks = JSON.parse(
+            localStorage.getItem(storageKey) || "[]"
+        );
+
+        const completedTasks = Array.isArray(savedTasks)
+            ? savedTasks.filter(task => task === true).length
+            : 0;
+
+        countElement.textContent =
+            `${completedTasks}/${totalTasks}`;
+
+    } catch (error) {
+        console.error(
+            "Could not load grooming progress:",
+            error
+        );
+
+        countElement.textContent = `0/${totalTasks}`;
+    }
+}
+
+
+// Update when grooming tasks are checked.
+$("#groomingTasks").addEventListener(
+    "change",
+    updateDashboardGroomingCount
+);
+
+
+// Update when the user resets the checklist.
+$("#resetGrooming").addEventListener(
+    "click",
+    updateDashboardGroomingCount
+);
+
+
+// Update when a different pet is selected.
+$("#dashboardPetSelect").addEventListener(
+    "change",
+    updateDashboardGroomingCount
+);
+
+
+// Show the saved progress when the website opens.
+updateDashboardGroomingCount();
