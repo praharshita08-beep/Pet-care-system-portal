@@ -2606,11 +2606,24 @@ function vaFindMatches(request) {
     const requestWeekday = new Date(
         request.date + "T12:00:00"
     ).getDay();
-
+// Find requests that already have an accepted volunteer.
+const scheduledRequests = vaGetRequests().filter(
+    item => item.status === "Accepted"
+);
+   
     return volunteers.filter(volunteer => {
         // Only verified, unblocked volunteers can match.
         if (!volunteer.verified) return false;
         if (blocked.includes(volunteer.id)) return false;
+       // A volunteer cannot accept two requests at the same time.
+const hasScheduleConflict = scheduledRequests.some(scheduled =>
+    scheduled.id !== request.id &&
+    scheduled.acceptedVolunteerId === volunteer.id &&
+    scheduled.date === request.date &&
+    scheduled.time === request.time
+);
+
+if (hasScheduleConflict) return false;
 
         // Match the requested service.
         if (!volunteer.services.includes(request.service)) {
