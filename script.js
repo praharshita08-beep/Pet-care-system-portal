@@ -4356,3 +4356,74 @@ $("#savedRequestsList").addEventListener("click", () => {
 // Display saved reviews whenever the page loads.
 renderServiceReviewBookingOptions();
 renderServiceReviews();
+
+/* ==================================
+   INDIVIDUAL SERVICE RATINGS
+================================== */
+
+function renderServiceCardRatings() {
+    const reviews = getServiceReviews();
+
+    $$(".service-card").forEach(card => {
+        const heading = card.querySelector("h3");
+
+        if (!heading) {
+            return;
+        }
+
+        const serviceName = heading.textContent.trim();
+
+        // Create a rating area if one doesn't exist.
+        let ratingElement = card.querySelector(
+            ".service-rating-summary"
+        );
+
+        if (!ratingElement) {
+            ratingElement = document.createElement("p");
+            ratingElement.className = "service-rating-summary";
+
+            const link = card.querySelector("a");
+
+            if (link) {
+                card.insertBefore(ratingElement, link);
+            } else {
+                card.appendChild(ratingElement);
+            }
+        }
+
+        // Find reviews for this particular service.
+        const serviceReviews = reviews.filter(
+            review => review.service === serviceName
+        );
+
+        if (serviceReviews.length === 0) {
+            ratingElement.textContent = "★ No ratings yet";
+            return;
+        }
+
+        const totalStars = serviceReviews.reduce(
+            (total, review) => total + Number(review.rating),
+            0
+        );
+
+        const average = (
+            totalStars / serviceReviews.length
+        ).toFixed(1);
+
+        const count = serviceReviews.length;
+        const label = count === 1 ? "review" : "reviews";
+
+        ratingElement.textContent =
+            `★ ${average} / 5 (${count} ${label})`;
+    });
+}
+
+
+// Show existing ratings when the website loads.
+renderServiceCardRatings();
+
+
+// Refresh service cards whenever a review is submitted.
+$("#serviceReviewForm").addEventListener("submit", () => {
+    renderServiceCardRatings();
+});
