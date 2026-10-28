@@ -1842,16 +1842,29 @@ function saveCareReminders(reminders) {
 }
 
 
-// Fill the pet dropdown using saved pet profiles.
+// Fill the reminder dropdown with saved pets only.
 function updateReminderPetOptions() {
     const select = $("#reminderPetSelect");
     const pets = getPetProfiles();
     const previousValue = select.value;
 
-    select.innerHTML = `
-        <option value="general">General care</option>
-    `;
+    // Remove all previous options, including General care.
+    select.innerHTML = "";
 
+    // Show a placeholder instead of General care.
+    const placeholder = document.createElement("option");
+
+    placeholder.value = "";
+    placeholder.textContent = pets.length
+        ? "Select a pet"
+        : "Add a pet profile first";
+
+    placeholder.disabled = true;
+    placeholder.selected = true;
+
+    select.appendChild(placeholder);
+
+    // Add only pets saved in My Pets.
     pets.forEach(pet => {
         const option = document.createElement("option");
 
@@ -1861,15 +1874,13 @@ function updateReminderPetOptions() {
         select.appendChild(option);
     });
 
-    const valueStillExists = [...select.options].some(
-        option => option.value === previousValue
+    // Preserve the selected pet if it still exists.
+    const petStillExists = pets.some(
+        pet => pet.id === previousValue
     );
 
-    select.value = valueStillExists
-        ? previousValue
-        : "general";
+    select.value = petStillExists ? previousValue : "";
 }
-
 
 // Work out a reminder's current status.
 function getReminderStatus(reminder) {
