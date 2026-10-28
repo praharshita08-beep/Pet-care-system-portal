@@ -2187,3 +2187,70 @@ bookingEmailField.addEventListener("input", () => {
         );
     }
 });
+
+
+/* ==================================
+   FRIENDLY FORM VALIDATION
+================================== */
+
+function addFriendlyFormValidation(formId) {
+    const form = document.getElementById(formId);
+
+    if (!form) {
+        return;
+    }
+
+    const fields = form.querySelectorAll(
+        "input, select, textarea"
+    );
+
+    fields.forEach(field => {
+
+        // Show a helpful message when a field is invalid.
+        field.addEventListener("invalid", function () {
+
+            if (this.validity.valueMissing) {
+                this.setCustomValidity(
+                    "Please complete this required field."
+                );
+
+            } else if (this.validity.typeMismatch) {
+                this.setCustomValidity(
+                    "Please enter a valid value."
+                );
+
+            } else if (this.validity.patternMismatch) {
+                this.setCustomValidity(
+                    "Please follow the requested format."
+                );
+
+            } else if (
+                this.validity.rangeUnderflow ||
+                this.validity.rangeOverflow
+            ) {
+                this.setCustomValidity(
+                    "Please choose a value within the allowed range."
+                );
+            }
+        });
+
+        // Clear the old message when the user corrects the field.
+        ["input", "change"].forEach(eventName => {
+            field.addEventListener(eventName, function () {
+                this.setCustomValidity("");
+            });
+        });
+    });
+}
+
+
+// Apply validation to the existing PawCare forms.
+[
+    "petProfileForm",
+    "healthForm",
+    "nutritionForm",
+    "trainingForm",
+    "adoptionForm",
+    "bookingForm",
+    "careReminderForm"
+].forEach(addFriendlyFormValidation);
