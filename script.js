@@ -3380,3 +3380,159 @@ vaRenderAll();
 $("#petProfileForm").addEventListener("submit", () => {
     vaUpdatePetOptions();
 });
+
+/* ==================================
+   PET CARE TIPS: FETCH AND JSON
+================================== */
+
+let petCareTips = [];
+
+
+// Load the JSON file from the GitHub repository.
+async function loadPetCareTips() {
+    const status = $("#tipsStatus");
+    const container = $("#tipsList");
+
+    status.textContent = "Loading pet-care tips...";
+
+    try {
+        const response = await fetch("pet-tips.json");
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load pet-tips.json. Check that the file exists."
+            );
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("The pet tips data format is incorrect.");
+        }
+
+        petCareTips = data;
+
+        renderPetTips();
+
+    } catch (error) {
+        console.error("Pet Care Tips error:", error);
+
+        status.textContent =
+            "Pet-care tips could not be loaded. Please check the JSON file and refresh the page.";
+
+        container.innerHTML = "";
+    }
+}
+
+
+// Search and filter the tips.
+function getFilteredPetTips() {
+    const searchText = $("#tipSearch")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const category = $("#tipCategory").value;
+    const petType = $("#tipPetType").value;
+
+    return petCareTips.filter(tip => {
+        const searchableText = [
+            tip.title,
+            tip.category,
+            tip.description,
+            ...(Array.isArray(tip.petTypes) ? tip.petTypes : [])
+        ].join(" ").toLowerCase();
+
+        const matchesSearch = searchableText.includes(searchText);
+
+        const matchesCategory =
+            category === "All" ||
+            tip.category === category;
+
+        // An empty pet-type selection means all pet types.
+        const matchesPetType =
+            !petType ||
+            petType === "All" ||
+            (
+                Array.isArray(tip.petTypes) &&
+                tip.petTypes.includes(petType)
+            );
+
+        return matchesSearch &&
+            matchesCategory &&
+            matchesPetType;
+    });
+}
+
+
+// Display the filtered tips on the page.
+function renderPetTips() {
+    const container = $("#tipsList");
+    const status = $("#tipsStatus");
+
+    const filteredTips = getFilteredPetTips();
+
+    status.textContent =
+        `${filteredTips.length} ${
+            filteredTips.length === 1 ? "tip" : "tips"
+        } found.`;
+
+    container.innerHTML = "";
+
+    if (filteredTips.length === 0) {
+        const emptyMessage = document.createElement("p");
+
+        emptyMessage.className = "empty-pets";
+        emptyMessage.textContent =
+            "No tips match your search. Try another keyword or category.";
+
+        container.appendChild(emptyMessage);
+        return;
+    }
+
+    filteredTips.forEach(tip => {
+        const card = document.createElement("article");
+
+        card.className = "tip-card";
+
+        const categoryBadge = document.createElement("span");
+        categoryBadge.className = "tip-category";
+        categoryBadge.textContent = tip.category;
+
+        const title = document.createElement("h4");
+        title.textContent = tip.title;
+
+        const description = document.createElement("p");
+        description.textContent = tip.description;
+
+        const petTypesLabel = document.createElement("div");
+        petTypesLabel.className = "tip-pet-types";
+
+        petTypesLabel.textContent =
+            "Suitable for: " +
+            (
+                Array.isArray(tip.petTypes)
+                    ? tip.petTypes.join(", ")
+                    : "General guidance"
+            );
+
+        card.appendChild(categoryBadge);
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(petTypesLabel);
+
+        container.appendChild(card);
+    });
+}
+
+
+// Update results when users search or change filters.
+$("#tipSearch").addEventListener("input", renderPetTips);
+
+$("#tipCategory").addEventListener("change", renderPetTips);
+
+$("#tipPetType").addEventListener("change", renderPetTips);
+
+
+// Load the tips when the page opens.
+loadPetCareTips();
