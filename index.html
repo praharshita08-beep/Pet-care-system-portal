@@ -1065,7 +1065,89 @@
         </div>
     </div>
 </section>
-    
+
+
+    <!-- DAILY CARE ROUTINE PLANNER -->
+
+<section class="section" id="routine">
+    <div class="container">
+
+        <div class="section-heading">
+            <p class="eyebrow">A LITTLE ROUTINE, A LOT OF CARE</p>
+            <h2>Plan their day.<br><span>One task at a time.</span></h2>
+            <p>
+                Arrange your pet-care tasks in the order that suits you.
+                Drag tasks to reorder them, or use the arrow buttons.
+            </p>
+        </div>
+
+        <div class="panel routine-panel">
+
+            <div class="panel-heading">
+                <div>
+                    <p class="panel-label">MY DAILY CHECKLIST</p>
+                    <h3>Care Routine</h3>
+                </div>
+                <span class="panel-symbol">📋</span>
+            </div>
+
+            <div class="routine-progress-info">
+                <span id="routineProgressText">
+                    0 of 6 tasks completed
+                </span>
+                <strong id="routineProgressPercent">0%</strong>
+            </div>
+
+            <div
+                class="progress-track"
+                role="progressbar"
+                id="routineProgress"
+                aria-label="Daily care routine progress"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+            >
+                <div id="routineProgressBar"></div>
+            </div>
+
+            <p class="muted-text">
+                Drag a task to change its position. On touch screens,
+                or when using a keyboard, use the move buttons.
+            </p>
+
+            <ul
+                id="routineTaskList"
+                class="routine-task-list"
+                aria-label="Daily pet-care tasks"
+            ></ul>
+
+            <div class="routine-footer">
+                <p
+                    id="routineStatus"
+                    class="muted-text"
+                    role="status"
+                    aria-live="polite"
+                >
+                    Your routine will be saved in this browser.
+                </p>
+
+                <button
+                    type="button"
+                    id="resetRoutine"
+                    class="button outline-button"
+                >
+                    Reset Routine
+                </button>
+            </div>
+
+            <p class="small-note">
+                Adapt each task to your pet's species and individual needs.
+                The checklist is a general organiser, not veterinary advice.
+            </p>
+
+        </div>
+    </div>
+</section>
 
     <!-- 5. ADOPTION AND RESCUE CENTRE -->
 
