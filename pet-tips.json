@@ -1,1 +1,86 @@
-
+[
+    {
+        "id": 1,
+        "title": "Keep Fresh Water Available",
+        "category": "Daily Care",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Bird", "Other"],
+        "description": "Make sure your pet has access to clean, fresh water. Clean water containers regularly and check them throughout the day."
+    },
+    {
+        "id": 2,
+        "title": "Build a Consistent Routine",
+        "category": "Daily Care",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Other"],
+        "description": "Try to keep feeding, enrichment and rest at predictable times suited to your pet's needs."
+    },
+    {
+        "id": 3,
+        "title": "Organise Veterinary Records",
+        "category": "Health",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Turtle", "Fish", "Guinea Pig", "Mouse", "Rat", "Ferret", "Reptile", "Other"],
+        "description": "Keep vaccination dates, veterinary visit information and health notes together. Ask a qualified veterinarian about appropriate preventive care."
+    },
+    {
+        "id": 4,
+        "title": "Make Grooming Comfortable",
+        "category": "Grooming",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Guinea Pig", "Ferret", "Other"],
+        "description": "Choose grooming practices appropriate for your pet's species, coat and comfort. Ask a veterinarian or qualified groomer about unfamiliar procedures."
+    },
+    {
+        "id": 5,
+        "title": "Provide Suitable Enrichment",
+        "category": "Training",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Guinea Pig", "Ferret", "Other"],
+        "description": "Offer safe, species-appropriate activities that encourage exploration and learning. Always supervise activities when needed."
+    },
+    {
+        "id": 6,
+        "title": "Use Positive Training",
+        "category": "Training",
+        "petTypes": ["Dog", "Cat", "Other"],
+        "description": "For pets suited to training, use gentle, reward-based methods and short sessions. Adapt activities to the animal's needs and abilities."
+    },
+    {
+        "id": 7,
+        "title": "Prepare Before Adopting",
+        "category": "Adoption",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Other"],
+        "description": "Consider the long-term cost, space, time and care needs before adopting. Speak with a reputable shelter or rescue organisation."
+    },
+    {
+        "id": 8,
+        "title": "Make Travel Plans Carefully",
+        "category": "Safety",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Bird", "Other"],
+        "description": "Plan pet transport in advance and use suitable carriers or restraints. Follow species-appropriate transport guidance and ask your veterinarian if you are unsure."
+    },
+    {
+        "id": 9,
+        "title": "Keep the Living Space Suitable",
+        "category": "Safety",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Turtle", "Fish", "Guinea Pig", "Mouse", "Rat", "Ferret", "Reptile", "Other"],
+        "description": "Provide a clean, safe environment that meets your pet's species-specific requirements, including suitable temperature, space and shelter."
+    },
+    {
+        "id": 10,
+        "title": "Choose Food for Your Pet's Needs",
+        "category": "Nutrition",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Turtle", "Fish", "Guinea Pig", "Mouse", "Rat", "Ferret", "Reptile", "Other"],
+        "description": "Choose food appropriate for your pet's species and life stage. Consult a veterinarian about dietary needs, portions and any special health requirements."
+    },
+    {
+        "id": 11,
+        "title": "Make Time for Appropriate Activity",
+        "category": "Exercise",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Ferret", "Other"],
+        "description": "Offer safe activity suited to your pet's health, age and abilities. Provide rest and stop activities if your pet shows signs of distress."
+    },
+    {
+        "id": 12,
+        "title": "Keep Important Contacts Ready",
+        "category": "Health",
+        "petTypes": ["Dog", "Cat", "Rabbit", "Hamster", "Bird", "Turtle", "Fish", "Guinea Pig", "Mouse", "Rat", "Ferret", "Reptile", "Other"],
+        "description": "Know how to contact your regular veterinary practice and locate an appropriate emergency veterinary service in advance."
+    }
+]
