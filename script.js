@@ -457,6 +457,130 @@ $("#trainingForm").addEventListener("submit", event => {
 });
 
 
+/* ==================================
+   SAVED ACTIVITY SESSIONS
+================================== */
+
+const ACTIVITY_STORAGE_KEY = "pawcare-activity-sessions";
+
+function getSavedActivitySessions() {
+    try {
+        const sessions = JSON.parse(
+            localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]"
+        );
+
+        return Array.isArray(sessions) ? sessions : [];
+    } catch (error) {
+        console.error("Could not load activity sessions:", error);
+        return [];
+    }
+}
+
+function saveActivitySessions(sessions) {
+    try {
+        localStorage.setItem(
+            ACTIVITY_STORAGE_KEY,
+            JSON.stringify(sessions)
+        );
+        return true;
+    } catch (error) {
+        showToast("Could not save activity sessions.");
+        return false;
+    }
+}
+
+function renderSavedActivitySessions() {
+    const sessions = getSavedActivitySessions();
+    const container = $("#savedActivitySessions");
+
+    $("#savedActivityCount").textContent =
+        sessions.length + (sessions.length === 1 ? " session" : " sessions");
+
+    if (sessions.length === 0) {
+        container.innerHTML = `
+            <p class="muted-text">No saved sessions yet.</p>
+        `;
+        return;
+    }
+
+    container.innerHTML = sessions.slice().reverse().map(session => {
+        const ideas = activityIdeas[session.focus] || activityIdeas.Movement;
+
+        return `
+            <article class="record-item">
+                <div>
+                    <h4>${escapeHTML(session.petName)}'s Activity Session</h4>
+
+                    <p>
+                        <strong>Pet Type:</strong> ${escapeHTML(session.petType)}<br>
+                        <strong>Focus:</strong> ${escapeHTML(session.focus)}<br>
+                        <strong>Duration:</strong> ${escapeHTML(session.duration)} minutes<br>
+                        <strong>Created:</strong> ${escapeHTML(formatDate(session.date))}
+                    </p>
+
+                    ${ideas.map((idea, index) => `
+                        <p>
+                            <strong>Step ${index + 1}:</strong>
+                            ${escapeHTML(idea)}
+                        </p>
+                    `).join("")}
+                </div>
+
+                <button
+                    type="button"
+                    class="record-delete"
+                    data-delete-activity="${escapeHTML(session.id)}"
+                >
+                    Delete
+                </button>
+            </article>
+        `;
+    }).join("");
+}
+
+$("#trainingForm").addEventListener("submit", event => {
+    const petName = $("#trainingPetName").value.trim();
+    const petType = $("#trainingPetType").value;
+    const focus = $("#trainingFocus").value;
+    const duration = $("#trainingDuration").value;
+
+    if (!petName || !petType) return;
+
+    const sessions = getSavedActivitySessions();
+
+    sessions.push({
+        id: Date.now().toString() + Math.random().toString(16).slice(2),
+        petName: petName,
+        petType: petType,
+        focus: focus,
+        duration: duration,
+        date: getLocalDate()
+    });
+
+    if (saveActivitySessions(sessions)) {
+        renderSavedActivitySessions();
+        showToast("Activity session saved.");
+    }
+});
+
+$("#savedActivitySessions").addEventListener("click", event => {
+    const button = event.target.closest("[data-delete-activity]");
+
+    if (!button) return;
+
+    const updated = getSavedActivitySessions().filter(
+        session => session.id !== button.dataset.deleteActivity
+    );
+
+    if (saveActivitySessions(updated)) {
+        renderSavedActivitySessions();
+        showToast("Activity session deleted.");
+    }
+});
+
+renderSavedActivitySessions();
+
+
 /* ----------------------------------
    5. ADOPTION AND RESCUE CENTRE
 ---------------------------------- */
@@ -1805,6 +1929,7 @@ $("#groomingPetSelect").addEventListener("change", event => {
 
 $("#dashboardPetSelect").addEventListener("change", () => {
     updateGroomingPetOptions();
+    loadGroomingChecklist();
 });
 
 $("#petProfileForm").addEventListener("submit", () => {
