@@ -1,3 +1,5 @@
+const SAVED_BOOKING_REQUESTS_KEY = 
+   "pawcare-saved-service-requests";
 "use strict";
 
 /* ----------------------------------
@@ -2040,9 +2042,13 @@ function loadGroomingChecklist() {
 
 
 // Store changes when a grooming task is checked.
-$("#groomingTasks").addEventListener("change", () => {
-    saveGroomingChecklist();
-});
+const groomingTasksElement = $("#groomingTasks");
+
+if (groomingTasksElement) {
+    groomingTasksElement.addEventListener("change", () => {
+        saveGroomingChecklist();
+    });
+}
 
 
 // Restore the right checklist when a different
@@ -4334,8 +4340,6 @@ setupPawCareDraft(
    SAVED SERVICE REQUESTS
 ================================== */
 
-const SAVED_BOOKING_REQUESTS_KEY =
-    "pawcare-saved-service-requests";
 
 function getSavedBookingRequests() {
     try {
