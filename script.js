@@ -1,6 +1,9 @@
-const SAVED_BOOKING_REQUESTS_KEY = 
-   "pawcare-saved-service-requests";
 "use strict";
+const SAVED_BOOKING_REQUESTS_KEY =
+    "pawcare-saved-service-requests";
+
+const SERVICE_REVIEWS_KEY =
+    "pawcare-service-reviews";
 
 /* ----------------------------------
    PAWCARE PET CARE SERVICES PORTAL
@@ -4374,9 +4377,6 @@ function saveSavedBookingRequests(requests) {
 /* ==================================
    SERVICE RATINGS AND REVIEWS
 ================================== */
-
-const SERVICE_REVIEWS_KEY = "pawcare-service-reviews";
-
 
 // Read reviews saved in this browser.
 function getServiceReviews() {
