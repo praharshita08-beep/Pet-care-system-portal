@@ -666,10 +666,25 @@ $("#bookingForm").addEventListener("submit", event => {
     const date = $("#bookingDate").value;
     const notes = $("#bookingNotes").value.trim();
 
-    if (!name || !email || !petName || !petType || !service) {
-        showToast("Please complete all required booking fields.");
-        return;
-    }
+
+   if (!name || !email || !petName || !petType || !service) {
+    showToast("Please complete all required booking fields.");
+    return;
+}
+
+// Validate email address
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailPattern.test(email)) {
+    showToast("Please enter a valid email address.");
+    return;
+}
+
+// Validate preferred booking date
+if (date && date < getLocalDate()) {
+    showToast("Booking date cannot be in the past.");
+    return;
+}
 
     const request = {
         id: Date.now().toString() +
