@@ -671,15 +671,34 @@ $("#bookingForm").addEventListener("submit", event => {
         return;
     }
 
+    const request = {
+        id: Date.now().toString() +
+            Math.random().toString(16).slice(2),
+        name: name,
+        petName: petName,
+        petType: petType,
+        service: service,
+        date: date,
+        notes: notes,
+        status: "Saved",
+        createdDate: getLocalDate()
+    };
+
+    const requests = getSavedBookingRequests();
+    requests.push(request);
+
+    if (!saveSavedBookingRequests(requests)) {
+        return;
+    }
+
     $("#bookingConfirmation").hidden = false;
 
     $("#bookingConfirmation").innerHTML = `
-        <h4>Service Request Prepared!</h4>
+        <h4>Service Request Saved!</h4>
 
         <p>Thank you, ${escapeHTML(name)}.</p>
 
         <p>
-            <strong>Email:</strong> ${escapeHTML(email)}<br>
             <strong>Pet:</strong> ${escapeHTML(petName)}<br>
             <strong>Pet Type:</strong> ${escapeHTML(petType)}<br>
             <strong>Service:</strong> ${escapeHTML(service)}
@@ -687,23 +706,19 @@ $("#bookingForm").addEventListener("submit", event => {
 
         ${
             date
-                ? `<p><strong>Preferred Date:</strong> ${escapeHTML(formatDate(date))}</p>`
-                : ""
-        }
-
-        ${
-            notes
-                ? `<p><strong>Additional Information:</strong> ${escapeHTML(notes)}</p>`
+                ? `<p><strong>Preferred Date:</strong>
+                    ${escapeHTML(formatDate(date))}</p>`
                 : ""
         }
 
         <p class="small-note">
-            This is a demonstration only. Your request has not been sent
-            to a service provider.
+            This request is saved in this browser only.
+            It has not been sent to a real service provider.
         </p>
     `;
 
-    showToast("Demo service request prepared.");
+    renderServiceReviewBookingOptions();
+    showToast("Service request saved.");
 });
 
 
@@ -4281,6 +4296,44 @@ setupPawCareDraft(
         $("#vaRequestDetails").value === ""
 );
 
+
+/* ==================================
+   SAVED SERVICE REQUESTS
+================================== */
+
+const SAVED_BOOKING_REQUESTS_KEY =
+    "pawcare-saved-service-requests";
+
+function getSavedBookingRequests() {
+    try {
+        const requests = JSON.parse(
+            localStorage.getItem(SAVED_BOOKING_REQUESTS_KEY) || "[]"
+        );
+
+        return Array.isArray(requests) ? requests : [];
+    } catch (error) {
+        console.error("Could not load service requests:", error);
+        return [];
+    }
+}
+
+function saveSavedBookingRequests(requests) {
+    try {
+        localStorage.setItem(
+            SAVED_BOOKING_REQUESTS_KEY,
+            JSON.stringify(requests)
+        );
+
+        return true;
+    } catch (error) {
+        console.error("Could not save service requests:", error);
+        showToast("Could not save the service request.");
+        return false;
+    }
+}
+
+
+
 /* ==================================
    SERVICE RATINGS AND REVIEWS
 ================================== */
@@ -4516,10 +4569,13 @@ $("#bookingForm").addEventListener("submit", () => {
 
 
 // Refresh if a saved request is removed.
-$("#savedRequestsList").addEventListener("click", () => {
-    renderServiceReviewBookingOptions();
-});
+const savedRequestsList = $("#savedRequestsList");
 
+if (savedRequestsList) {
+    savedRequestsList.addEventListener("click", () => {
+        renderServiceReviewBookingOptions();
+    });
+}
 
 // Display saved reviews whenever the page loads.
 renderServiceReviewBookingOptions();
