@@ -374,9 +374,13 @@ function updateGroomingProgress() {
     $("#groomingProgressBar").style.width =
         `${percentage}%`;
 }
+const groomingTasksElement = $("#groomingTasks");
 
-$("#groomingTasks").addEventListener("change", updateGroomingProgress);
-
+if (groomingTasksElement) {
+    groomingTasksElement.addEventListener("change", () => {
+        saveGroomingChecklist();
+    });
+}
 $("#resetGrooming").addEventListener("click", () => {
     $$(".groom-task").forEach(task => {
         task.checked = false;
