@@ -1766,6 +1766,56 @@ renderPawCareDashboard();
 /* ==================================
    SAVE GROOMING CHECKLIST PROGRESS
 ================================== */
+function updateGroomingPetOptions() {
+    const select = $("#groomingPetSelect");
+    const pets = getPetProfiles();
+    const previousValue = select.value;
+
+    select.innerHTML = `
+        <option value="">General Checklist</option>
+    `;
+
+    pets.forEach(pet => {
+        const option = document.createElement("option");
+        option.value = pet.id;
+        option.textContent = pet.name + " (" + pet.type + ")";
+        select.appendChild(option);
+    });
+
+    const savedId = localStorage.getItem("pawcare-selected-pet-id");
+
+    select.value = pets.some(pet => pet.id === previousValue)
+        ? previousValue
+        : (pets.some(pet => pet.id === savedId) ? savedId : "");
+}
+
+$("#groomingPetSelect").addEventListener("change", event => {
+    const selectedId = event.target.value;
+
+    if (selectedId) {
+        localStorage.setItem("pawcare-selected-pet-id", selectedId);
+    } else {
+        localStorage.removeItem("pawcare-selected-pet-id");
+    }
+
+    $("#dashboardPetSelect").value = selectedId;
+    loadGroomingChecklist();
+    updateDashboardGroomingCount();
+});
+
+$("#dashboardPetSelect").addEventListener("change", () => {
+    updateGroomingPetOptions();
+});
+
+$("#petProfileForm").addEventListener("submit", () => {
+    updateGroomingPetOptions();
+});
+
+$("#petProfilesList").addEventListener("click", () => {
+    updateGroomingPetOptions();
+});
+
+updateGroomingPetOptions();
 
 // Save a separate checklist for each pet selected
 // in the dashboard. If no pet is selected, use a
