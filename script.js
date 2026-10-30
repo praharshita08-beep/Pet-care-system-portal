@@ -741,8 +741,9 @@ if (date && date < getLocalDate()) {
         </p>
     `;
 
-    renderServiceReviewBookingOptions();
-    showToast("Service request saved.");
+   renderSavedBookingRequests();
+renderServiceReviewBookingOptions();
+showToast("Service request saved.");
 });
 
 
@@ -4375,7 +4376,52 @@ function saveSavedBookingRequests(requests) {
         return false;
     }
 }
+// Display all saved service requests
+function renderSavedBookingRequests() {
+    const requests = getSavedBookingRequests();
 
+    const list = $("#savedBookingRequestsList");
+    const count = $("#savedBookingCount");
+
+    if (!list || !count) return;
+
+    count.textContent =
+        requests.length +
+        (requests.length === 1 ? " request" : " requests");
+
+    if (requests.length === 0) {
+        list.innerHTML =
+            '<p class="muted-text">No service requests saved yet.</p>';
+        return;
+    }
+
+    list.innerHTML = requests.slice().reverse().map(request => `
+        <article class="record-item">
+            <div>
+                <strong>${escapeHTML(request.petName)} — ${escapeHTML(request.service)}</strong>
+
+                <small>Pet Type: ${escapeHTML(request.petType)}</small>
+
+                <small>
+                    Preferred Date: ${escapeHTML(formatDate(request.date))}
+                </small>
+
+                <small>
+                    Status: ${escapeHTML(request.status || "Saved")}
+                </small>
+
+                ${
+                    request.notes
+                        ? `<small>Notes: ${escapeHTML(request.notes)}</small>`
+                        : ""
+                }
+            </div>
+        </article>
+    `).join("");
+}
+
+// Show previously saved requests when the website opens
+renderSavedBookingRequests();
 
 
 /* ==================================
