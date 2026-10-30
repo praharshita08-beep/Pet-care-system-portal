@@ -1508,7 +1508,25 @@ $("#petProfileForm").addEventListener("submit", event => {
         showToast("Please enter a pet name and type.");
         return;
     }
+   // Prevent names made entirely of spaces or numbers
+const petNamePattern = /^(?=.*[A-Za-z])[A-Za-z0-9 .'-]+$/;
 
+if (!petNamePattern.test(profile.name)) {
+    showToast("Please enter a valid pet name.");
+    return;
+}
+
+// Limit pet name length
+if (profile.name.length > 40) {
+    showToast("Pet name must be 40 characters or fewer.");
+    return;
+}
+
+// Limit breed field length
+if (profile.breed.length > 60) {
+    showToast("Breed must be 60 characters or fewer.");
+    return;
+}
     if (
         profile.birthDate &&
         profile.birthDate > getLocalDate()
